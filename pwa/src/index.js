@@ -1,16 +1,21 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import './index.css';
+import ReactDOM from 'react-dom/client';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import App from './App';
 import SearchBox from './SearchBox';
+import RealTimePage from './RealTimePage';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <SearchBox />
-  </React.StrictMode>
+  <BrowserRouter>
+     <Routes>
+      <Route path="/" element={<SearchBox />} />
+      <Route path="/RealTimePage" element={<RealTimePage />} />
+    </Routes>
+</BrowserRouter>
 );
 
 // If you want your app to work offline and load faster, you can change
