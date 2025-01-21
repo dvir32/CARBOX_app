@@ -1,4 +1,6 @@
-import React from 'react';
+
+import * as React from 'react';
+import Button from '@mui/material/Button';
 import { useState } from 'react';
 import './App.css';
 
@@ -67,10 +69,12 @@ function App() {
   return (
     <div >
     <button onClick={handleStart}>starttt</button>
-    <button onClick={handleStop}>stoppp</button>
+    <Button variant="contained" onClick={handleStop}>stoppp</Button>
     </div>
   );
   
 }
 
 export default App;
+
+

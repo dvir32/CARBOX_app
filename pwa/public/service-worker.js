@@ -10,19 +10,13 @@ let urlsToCache = ["/", "/search", "/aboutus", "/profile"];
 // Install a service worker
 self.addEventListener("install", (event) => {
     // Perform install steps
-    event.waitUntil(
-        caches
-            .open(STATIC_CACHE_NAME)
-            .then(function (cache) {
-                console.log("Opened cache");
-                return cache.addAll(urlsToCache);
-            })
-    );
+    console.log('service worker installed')
 });
  
 
 // Cache and return requests
 self.addEventListener("fetch", (event) => {
+<<<<<<< HEAD
     const url = new URL(event.request.url);
   
     // Ignore unsupported protocols
@@ -117,3 +111,12 @@ self.addEventListener('message', (event) => {
     }
   });
   
+=======
+    console.log('service worker installed')
+});
+ 
+// Update a service worker
+self.addEventListener("activate", (event) => {
+    console.log('service worker installed')
+});
+>>>>>>> main
