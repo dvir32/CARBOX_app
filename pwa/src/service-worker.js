@@ -66,7 +66,13 @@ registerRoute(
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
+    event.ports[0].postMessage({ success: true }); // שליחת תגובה חזרה
   }
 });
 
 // Any other custom service worker logic can go here.
+
+self.addEventListener('fetch', (event) => {
+  console.log('Fetch request for:', event.request.url);
+});
+
