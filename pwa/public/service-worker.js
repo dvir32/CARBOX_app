@@ -16,7 +16,6 @@ self.addEventListener("install", (event) => {
 
 // Cache and return requests
 self.addEventListener("fetch", (event) => {
-<<<<<<< HEAD
     const url = new URL(event.request.url);
   
     // Ignore unsupported protocols
@@ -111,12 +110,3 @@ self.addEventListener('message', (event) => {
     }
   });
   
-=======
-    console.log('service worker installed')
-});
- 
-// Update a service worker
-self.addEventListener("activate", (event) => {
-    console.log('service worker installed')
-});
->>>>>>> main
