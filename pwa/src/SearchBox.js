@@ -74,7 +74,9 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
   const navigate = useNavigate();
 
   const handleClickNext = () => {
-    console.log(departureTime)
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
     fetch("https://localhost:7158/api/order", {
       method: "POST", 
       headers: {
@@ -83,18 +85,19 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
       body: JSON.stringify(
         {
           UserId: 30,
-          Origin: "A",
-          Destination: "D",
+          Origin: originStation,
+          Destination: destinationStation,
           RideTime: {
-            $date: "2025-02-02T09:14:36.971Z"
-  },
-  CreatedAt: {
-    date: "2025-02-02T09:14:58.237Z"
-  },
-  Status: 0
-        }
-      )
-    })
+            date: departureTime
+          },
+          CreatedAt: {
+
+            date: `${hours}:${minutes}`
+          },
+          Status: 0
+                }
+              )
+            })
     .then((response) => {
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
