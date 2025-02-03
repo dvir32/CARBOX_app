@@ -9,7 +9,7 @@ function App() {
 
   const handleStart = () => {
     setStatus("start")
-    fetch("https://..", {
+    fetch("https://localhost:7158/api/StartStop", {
       method: "POST", 
       headers: {
         'Content-Type': 'application/json'
@@ -20,15 +20,27 @@ function App() {
         }
       )
     })
-      .then((response) => response.json())
-      .then((data) => {
+    .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+        return response.json();
       })
-      .catch((error) => console.log(error));
-  } ;
+      .then((data) => {
+        console.log("Status updated:", data);
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //     })
+  //     .catch((error) => console.log(error));
+   } ;
 
   const handleStop = () => {
     setStatus("stop")
-    fetch("https://..", {
+    fetch("https://localhost:7158/api/StartStop", {
       method: "POST", 
       headers: {
         'Content-Type': 'application/json'
@@ -39,11 +51,19 @@ function App() {
         }
       )
     })
-      .then((response) => response.json())
-      .then((data) => {
-      })
-      .catch((error) => console.log(error));
-  } ;
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Status updated:", data);
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+    });
+  };
 
 
   return (
