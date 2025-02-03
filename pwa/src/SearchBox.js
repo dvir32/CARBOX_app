@@ -74,6 +74,46 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
   const navigate = useNavigate();
 
   const handleClickNext = () => {
+    console.log(departureTime)
+    fetch("https://localhost:7158/api/order", {
+      method: "POST", 
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(
+        {
+          UserId: 30,
+          Origin: "A",
+          Destination: "D",
+          RideTime: {
+            $date: "2025-02-02T09:14:36.971Z"
+  },
+  CreatedAt: {
+    date: "2025-02-02T09:14:58.237Z"
+  },
+  Status: 0
+        }
+      )
+    })
+    .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Status updated:", data);
+        // navigate('/RealTimePage', {
+        //   state: {
+        //     originStation: originStation,
+        //     destinationStation:destinationStation,
+        //     departureTime:departureTime
+        //   }
+        // });
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
     if (isFormValid){
       navigate('/RealTimePage', {
         state: {
