@@ -1,10 +1,18 @@
-using carbox;
 using carbox.Date;
+using carbox.Repositories;
+using carbox.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MongoDBService
 builder.Services.AddSingleton<MongoDBService>();
+
+// Add MQTTClientService as a Background Service
+builder.Services.AddHostedService<MqttService>();
+
+builder.Services.AddScoped<RideOrderRepository>();
+builder.Services.AddScoped<CarRepository>();
+builder.Services.AddScoped<RideService>();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -14,7 +22,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // ????? ?-React
+        builder.WithOrigins("http://localhost:3000") // React
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
