@@ -1,0 +1,23 @@
+﻿namespace carbox.Models
+{
+    public class RideOrder
+    {
+        public string Id { get; set; }  // מזהה הזמנה
+        public string UserId { get; set; }
+        public string Origin { get; set; }
+        public string Destination { get; set; }
+        public DateTime RideTime { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public RideOrderStatus Status { get; set; } = RideOrderStatus.Open;
+        public string? AssignedCarId { get; set; } // מזהה הרכב שהוקצה
+    }
+
+    public enum RideOrderStatus
+    {
+        Open = 0,
+        Assigned = 1,
+        InProgress = 2,
+        Completed = 3,
+        Cancelled = 4
+    }
+}
