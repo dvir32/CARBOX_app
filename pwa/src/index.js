@@ -5,6 +5,8 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import App from './App';
 import SearchBox from './SearchBox';
 import LoadingPage from './LoadingPage';
+import FindingCarbox from './FindingCarbox';
+import CarboxArrived from './CarboxArrived';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
@@ -14,6 +16,8 @@ root.render(
      <Routes>
       <Route path="/" element={<SearchBox />} />
       <Route path="/LoadingPage" element={<LoadingPage />} />
+      <Route path="/FindingCarbox" element={<FindingCarbox />} />
+      <Route path="/CarboxArrived" element={<CarboxArrived />} />
     </Routes>
 </BrowserRouter>
 );
