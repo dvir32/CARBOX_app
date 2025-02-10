@@ -1,5 +1,4 @@
 {
-  "homepage": "http://www.cbtrans.co.site/",
   "name": "pwa",
   "version": "0.1.0",
   "private": true,
@@ -9,20 +8,14 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.0",
     "@mui/x-date-pickers": "^7.23.6",
-    "@react-google-maps/api": "^2.20.5",
-    "@vis.gl/react-google-maps": "^1.5.0",
     "cra-template-pwa": "2.0.0",
     "dayjs": "^1.11.13",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
-    "leaflet": "^1.9.4",
-    "nmea-parser": "^1.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-loading": "^2.0.3",
     "react-router-dom": "^7.1.3",
-    "react-scripts": "5.0.1",
-    "react-spinners": "^0.15.0"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
