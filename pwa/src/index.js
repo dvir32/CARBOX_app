@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import App from './App';
 import SearchBox from './SearchBox';
-import RealTimePage from './RealTimePage';
+import LoadingPage from './LoadingPage';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
@@ -13,7 +13,7 @@ root.render(
   <BrowserRouter>
      <Routes>
       <Route path="/" element={<SearchBox />} />
-      <Route path="/RealTimePage" element={<RealTimePage />} />
+      <Route path="/LoadingPage" element={<LoadingPage />} />
     </Routes>
 </BrowserRouter>
 );

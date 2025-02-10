@@ -5,9 +5,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useEffect,useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
-import './SearchBox.css';
+import FadeLoader from "react-spinners/FadeLoader";
+import './LoadingPage.css';
 
-function RealTimePage() {
+function LoadingPage() {
     const location = useLocation();
     const originStation = location.state.originStation;
     const destinationStation = location.state.destinationStation;
@@ -20,11 +21,15 @@ function RealTimePage() {
   return (
     
     <div>
+    <div id='loading-box'>
+    Looking for a CARBOX..
+    <FadeLoader />
+    </div>
     </div>
   );
   
 }
 
-export default RealTimePage; 
+export default LoadingPage; 
 
 
