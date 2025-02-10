@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useEffect,useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import FadeLoader from "react-spinners/FadeLoader";
 import './SearchBox.css';
 
 function SearchBox() {
@@ -77,7 +78,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    fetch("https://localhost:7158/api/order", {
+    fetch("http://localhost:5000/api/RideOrders", {
       method: "POST", 
       headers: {
         'Content-Type': 'application/json'
@@ -89,12 +90,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
           Destination: destinationStation,
           RideTime: {
             date: departureTime
-          },
-          CreatedAt: {
-
-            date: `${hours}:${minutes}`
-          },
-          Status: 0
+          }
                 }
               )
             })
@@ -106,7 +102,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
       })
       .then((data) => {
         console.log("Status updated:", data);
-        // navigate('/RealTimePage', {
+        // navigate('/LoadingPage', {
         //   state: {
         //     originStation: originStation,
         //     destinationStation:destinationStation,
@@ -118,7 +114,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
         console.error("Fetch error:", error);
       });
     if (isFormValid){
-      navigate('/RealTimePage', {
+      navigate('/LoadingPage', {
         state: {
           originStation: originStation,
           destinationStation:destinationStation,
@@ -135,7 +131,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
   return (
     
     <div id='search-box'>
-
+    
     <TextField
         className="search-field"
         id="outlined-select-currency-native"
