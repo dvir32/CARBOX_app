@@ -10,6 +10,7 @@ namespace carbox.Services
     {
         private readonly RideOrderRepository _rideOrderRepository; // Database repository for ride orders
         private readonly CarRepository _carRepository; // Database repository for cars
+        Random rnd = new Random();
 
         // Constructor - injects repositories
         public RideService(RideOrderRepository rideOrderRepository, CarRepository carRepository)
@@ -24,7 +25,8 @@ namespace carbox.Services
             if (rideOrder == null)
                 throw new ArgumentNullException(nameof(rideOrder));
 
-            rideOrder.Id = Guid.NewGuid().ToString(); // Ensure ID is set
+
+            rideOrder.Id = rnd.Next(); // Ensure ID is set
             rideOrder.CreatedAt = DateTime.UtcNow;
             rideOrder.Status = RideOrderStatus.Open; // Default status
 
@@ -32,8 +34,28 @@ namespace carbox.Services
             return rideOrder;
         }
 
+        //הגעה לתחנה:
+        //1. עדכון רשימת התחנות של הרכב
+        //2. הורדת אחוזי סוללה
+
+
+        //   רשימה של כל הרכבין הזמינים
+        //   (הראשון הכי קרוב (למיין לפי המיקום
+        // לעבור על הרשימה הממוינת עד שנמצא מישהו  מתאים (לפי מצב הסוללה וזמן ההגעה
+        // אם אין רכב מתאים מחזירים את הרכבהכי קרוב להתאמה עם ההערה
+        //
+
+
+        //שיבוץ רכב 
+        //// Assign the car to the ride order
+        //rideOrder.AssignedCarId = nearestCar.Id;
+        //    rideOrder.Status = RideOrderStatus.Assigned;
+        // הוספת תחנה לרשימה מיון ועדכון רשימה
+
+
+
         // Assigns an available car to a ride order
-        public async Task<RideOrder> AssignCarToRide(string rideOrderId)
+        public async Task<RideOrder> AssignCarToRide(int rideOrderId)
         {
             // Fetch the ride order by ID
             var rideOrder = await _rideOrderRepository.GetRideByIdAsync(rideOrderId);

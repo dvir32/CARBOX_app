@@ -2,8 +2,8 @@
 {
     public class RideOrder
     {
-        public string Id { get; set; }  // מזהה הזמנה
-        public string UserId { get; set; }
+        public int Id { get; set; }  // מזהה הזמנה
+        public int UserId { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
         public DateTime RideTime { get; set; }

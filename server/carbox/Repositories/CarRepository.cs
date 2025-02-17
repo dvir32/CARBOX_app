@@ -39,5 +39,11 @@ namespace carbox.Repositories
         {
             await _carCollection.ReplaceOneAsync(c => c.Id == car.Id, car);
         }
+
+        //update סוללה
+        // מקבלת ID של הרכב ואחוזי סוולה ןמעדכנת את ה DB.
+
+        //update רשימת תחנות
+        // מקבלת ID של הרכב ורשימת תחנות ומעדכנת את ה DB.
     }
 }
