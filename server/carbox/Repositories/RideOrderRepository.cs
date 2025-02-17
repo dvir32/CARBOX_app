@@ -22,7 +22,7 @@ namespace carbox.Repositories
         }
 
         // Retrieves a ride order by ID
-        public async Task<RideOrder> GetRideByIdAsync(string id)
+        public async Task<RideOrder> GetRideByIdAsync(int id)
         {
             return await _rideOrdersCollection.Find(ride => ride.Id == id).FirstOrDefaultAsync();
         }

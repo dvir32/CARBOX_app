@@ -63,6 +63,21 @@ namespace carbox.Controllers
             await _carRepository.UpdateCarAsync(updatedCar);
             return Ok(new { message = "Car updated successfully", updatedCar });
         }
+
+
+        //update סוללה
+        // מקבלת ID של הרכב ואחוזי סוולה ןמעדכנת את ה DB.
+
+
+        //update רשימת תחנות
+        // מקבלת ID של הרכב ורשימת תחנות ומעדכנת את ה DB.
+
+        //get מצב סוללה
+        //משתמשת בפונקציה GetCarById(string id)
+
+        //get רשימת תחנות
+        //משתמשת בפונקציה GetCarById(string id)
+
     }
 }
 

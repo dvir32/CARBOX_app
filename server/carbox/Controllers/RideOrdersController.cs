@@ -4,6 +4,8 @@ using carbox.Repositories;
 using carbox.Services;
 using System;
 using System.Threading.Tasks;
+using TimeZoneConverter;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace carbox.Controllers
 {
@@ -18,7 +20,15 @@ namespace carbox.Controllers
             _rideService = rideService;
         }
 
+        private DateTime GetIsraelDateTime()
+        {
+            TimeZoneInfo israelTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Israel Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, israelTimeZone);
+        }
+
+
         // Creates a new ride order
+        // POST: /api/RideOrders
         [HttpPost]
         public async Task<IActionResult> CreateRideOrder([FromBody] RideOrderRequest rideOrderRequest)
         {
@@ -27,13 +37,20 @@ namespace carbox.Controllers
                 return BadRequest("Invalid ride order request.");
             }
 
+            //// Get current UTC time
+            //DateTime createdAtUtc = DateTime.UtcNow;
+
+            //// Convert to Israel time using the new function
+            //DateTime createdAtIsraelTime = ConvertUtcToIsraelTime(createdAtUtc);
+
+
             var rideOrder = new RideOrder
             {
                 UserId = rideOrderRequest.UserId,
                 Origin = rideOrderRequest.Origin,
                 Destination = rideOrderRequest.Destination,
                 RideTime = rideOrderRequest.RideTime,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = GetIsraelDateTime()
             };
 
             var createdRide = await _rideService.CreateRideOrderAsync(rideOrder);
@@ -42,8 +59,9 @@ namespace carbox.Controllers
         }
 
         // Assigns a car to a ride order
+        // POST: /api/RideOrders/{rideOrderId}/assign
         [HttpPost("{rideOrderId}/assign")]
-        public async Task<IActionResult> AssignCar(string rideOrderId)
+        public async Task<IActionResult> AssignCar(int rideOrderId)
         {
             try
             {
@@ -60,65 +78,10 @@ namespace carbox.Controllers
         // DTO for incoming ride order request
         public class RideOrderRequest
         {
-            public string UserId { get; set; }
-            public string Origin { get; set; }
-            public string Destination { get; set; }
+            public int UserId { get; set; }
+            public required string Origin { get; set; }
+            public required string Destination { get; set; }
             public DateTime RideTime { get; set; }
         }
     }
 }
-
-
-
-//using carbox.Date;
-//using Microsoft.AspNetCore.Mvc;
-//using MongoDB.Bson;
-//using MongoDB.Driver;
-//using carbox.Models;
-
-//namespace carbox.Controllers
-//{
-//    [ApiController]
-//    [Route("api/[controller]")]
-//    public class RideOrdersController : ControllerBase
-//    {
-//        private readonly IMongoCollection<RideOrder> _rideOrdersCollection;
-
-//        public RideOrdersController(MongoDBService mongoDBService)
-//        {
-//            // MongoDB connection setup
-//            _rideOrdersCollection = mongoDBService.Database?.GetCollection<RideOrder>("Orders");
-//        }
-
-//        [HttpPost]
-//        public IActionResult CreateRideOrder([FromBody] RideOrderRequest rideOrderRequest)
-//        {
-//            if (rideOrderRequest == null || !ModelState.IsValid)
-//            {
-//                return BadRequest("Invalid ride order request.");
-//            }
-
-//            var rideOrder = new RideOrder
-//            {
-//                UserId = rideOrderRequest.UserId,
-//                Origin = rideOrderRequest.Origin,
-//                Destination = rideOrderRequest.Destination,
-//                RideTime = rideOrderRequest.RideTime,
-//                CreatedAt = DateTime.UtcNow
-//            };
-
-//            _rideOrdersCollection.InsertOne(rideOrder);
-
-//            return Ok(new { Message = "Ride order created successfully", RideOrderId = rideOrder.UserId });
-//        }
-//    }
-
-//    // DTO for incoming ride order request
-//    public class RideOrderRequest
-//    {
-//        public string UserId { get; set; }
-//        public string Origin { get; set; }
-//        public string Destination { get; set; }
-//        public DateTime RideTime { get; set; }
-//    }
-//}
