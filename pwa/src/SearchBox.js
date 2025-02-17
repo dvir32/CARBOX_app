@@ -7,6 +7,7 @@ import { useEffect,useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import FadeLoader from "react-spinners/FadeLoader";
 import './SearchBox.css';
+import Map from './Map';
 
 function SearchBox() {
 
@@ -198,17 +199,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
     >
       Next
     </Button>
-    <div><iframe
-    width="100%"
-    height="600"
-    frameBorder="0"
-    scrolling="no"
-    marginHeight="0"
-    marginWidth="0"
-    src={`https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${mapLocation.lat},${mapLocation.lng}&t=&z=14&ie=UTF8&iwloc=B&output=embed`}
-  >
-    <a href="https://www.gps.ie/">gps trackers</a>
-  </iframe></div>         
+    <div><Map/></div>         
       
 
     </div>
