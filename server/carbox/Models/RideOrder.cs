@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }  // מזהה הזמנה
         public int UserId { get; set; }
-        public string Origin { get; set; }
-        public string Destination { get; set; }
+        public Station Origin { get; set; }
+        public Station Destination { get; set; }
         public DateTime RideTime { get; set; }
         public DateTime CreatedAt { get; set; }
         public RideOrderStatus Status { get; set; } = RideOrderStatus.Open;

@@ -6,8 +6,8 @@ namespace carbox.Models
         public string Id { get; set; }  // Vehicle identifier
         public CarStatus Status { get; set; }  // Status (Available/Occupied)
         public Location Location { get; set; }  // Vehicle location
-        public double BatteryPercentage { get; set; } // Battery percentage
-        public List<string> StopStations { get; set; } = new List<string>(); // List of stop stations
+        public double BatteryLevel { get; set; } // Battery percentage
+        public List<Station> StopStations { get; set; } = new List<Station>(); // List of stop stations
     }
 
     public enum CarStatus

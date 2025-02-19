@@ -64,54 +64,58 @@ namespace carbox.Controllers
             return Ok(new { message = "Car updated successfully", updatedCar });
         }
 
+        //// Update battery level
+        //[HttpPut("updateBattery/{id}")]
+        //public async Task<IActionResult> UpdateBatteryLevel(string id, [FromBody] int batteryLevel)
+        //{
+        //    var car = await _carRepository.GetCarByIdAsync(id);
+        //    if (car == null)
+        //    {
+        //        return NotFound("Car not found.");
+        //    }
 
-        //update סוללה
-        // מקבלת ID של הרכב ואחוזי סוולה ןמעדכנת את ה DB.
+        //    car.BatteryLevel = batteryLevel;
+        //    await _carRepository.UpdateCarAsync(car);
+        //    return Ok(new { message = "Battery level updated successfully", car });
+        //}
 
+        //// Update station list
+        //[HttpPut("updateStations/{id}")]
+        //public async Task<IActionResult> UpdateStations(string id, [FromBody] List<string> stations)
+        //{
+        //    var car = await _carRepository.GetCarByIdAsync(id);
+        //    if (car == null)
+        //    {
+        //        return NotFound("Car not found.");
+        //    }
 
-        //update רשימת תחנות
-        // מקבלת ID של הרכב ורשימת תחנות ומעדכנת את ה DB.
+        //    car.StopStations = stations;
+        //    await _carRepository.UpdateCarAsync(car);
+        //    return Ok(new { message = "Station list updated successfully", car });
+        //}
 
-        //get מצב סוללה
-        //משתמשת בפונקציה GetCarById(string id)
+        // Get battery level
+        [HttpGet("battery/{id}")]
+        public async Task<IActionResult> GetBatteryLevel(string id)
+        {
+            var car = await _carRepository.GetCarByIdAsync(id);
+            if (car == null)
+            {
+                return NotFound("Car not found.");
+            }
+            return Ok(new { batteryLevel = car.BatteryLevel });
+        }
 
-        //get רשימת תחנות
-        //משתמשת בפונקציה GetCarById(string id)
-
+        // Get station list
+        [HttpGet("stations/{id}")]
+        public async Task<IActionResult> GetStations(string id)
+        {
+            var car = await _carRepository.GetCarByIdAsync(id);
+            if (car == null)
+            {
+                return NotFound("Car not found.");
+            }
+            return Ok(new { stations = car.StopStations });
+        }
     }
 }
-
-
-
-
-//using Microsoft.AspNetCore.Mvc;
-//using carbox.Models;
-//using MongoDB.Driver;
-//using carbox.Date;
-
-//namespace carbox.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class CarController : ControllerBase
-//    {
-//        private readonly IMongoCollection<Car> _carCollection;
-
-//        public CarController(MongoDBService mongoDBService)
-//        {
-//            _carCollection = mongoDBService.Database?.GetCollection<Car>("Cars");
-//        }
-
-//        [HttpPost("add")]
-//        public IActionResult AddCar([FromBody] Car newCar)
-//        {
-//            if (newCar == null || string.IsNullOrEmpty(newCar.Id))
-//            {
-//                return BadRequest("Invalid car data.");
-//            }
-
-//            _carCollection.InsertOne(newCar);
-//            return Ok(newCar);
-//        }
-//    }
-//}
