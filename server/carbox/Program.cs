@@ -12,6 +12,7 @@ builder.Services.AddHostedService<MqttService>();
 
 builder.Services.AddScoped<RideOrderRepository>();
 builder.Services.AddScoped<CarRepository>();
+builder.Services.AddScoped<StationRepository>();
 builder.Services.AddScoped<RideService>();
 
 // Add services to the container.

@@ -65,7 +65,7 @@ namespace carbox.Controllers
         {
             try
             {
-                var ride = await _rideService.AssignCarToRide(rideOrderId);
+                var ride = await _rideService.SearchCarToRide(rideOrderId);
                 return Ok(ride);
             }
             catch (Exception ex)
