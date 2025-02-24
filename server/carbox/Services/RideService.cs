@@ -2,6 +2,7 @@
 using carbox.Repositories;
 using System;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace carbox.Services
 {
@@ -10,6 +11,7 @@ namespace carbox.Services
     {
         private readonly RideOrderRepository _rideOrderRepository; // Database repository for ride orders
         private readonly CarRepository _carRepository; // Database repository for cars
+        private readonly StationRepository _stationRepository;
         Random rnd = new Random();
 
         // Constructor - injects repositories
@@ -66,7 +68,7 @@ namespace carbox.Services
 
             // Add station to list, sort and update
             car.StopStations.Add(newStation);
-            car.StopStations = car.StopStations.OrderBy(static s => int.TryParse(s.Id, out int id) ? id : int.MaxValue).ToList(); // Example sorting logic
+            car.StopStations = car.StopStations.OrderBy(s => s.Id).ToList(); // Example sorting logic
 
             // Update car status to "Occupied"
             car.Status = CarStatus.Occupied;
@@ -76,27 +78,107 @@ namespace carbox.Services
         }
 
 
+
         public async Task<RideOrder> SearchCarToRide(int rideOrderId)
         {
-            // Fetch the ride order by ID
             var rideOrder = await _rideOrderRepository.GetRideByIdAsync(rideOrderId);
 
-            // Check if the ride order exists and is open
             if (rideOrder == null || rideOrder.Status != RideOrderStatus.Open)
-                throw new Exception("Ride order not found or not open");
+                throw new InvalidOperationException("Ride order not found or not open");
 
-            // Retrieve available cars from the database
             var availableCars = await _carRepository.GetAvailableCarsAsync();
 
-            // Select the first available car (this can be improved to find the closest car)
-            var nearestCar = availableCars.FirstOrDefault();
+            if (!availableCars.Any())
+                throw new InvalidOperationException("No available cars at the moment");
 
-            // If no cars are available, throw an error
-            if (nearestCar == null)
-                throw new Exception("No available cars at the moment");
-            
-            return rideOrder; // Return the updated ride order
+            // מיון הרכבים לפי המרחק במסלול החד כיווני
+            var nearestCar = FindNearestCarInCircularRoute(availableCars, rideOrder.source);
+
+            // עדכון הנסיעה עם הרכב שנבחר
+            AssignCarToRide(nearestCar, rideOrder);
+            //rideOrder.CarId = nearestCar.Id;
+            //rideOrder.Status = RideOrderStatus.CarAssigned;
+            //await _rideOrderRepository.UpdateRideAsync(rideOrder);
+
+            return rideOrder;
         }
+
+        private Car FindNearestCarInCircularRoute(List<Car> availableCars, Station source)
+        {
+            return availableCars
+                .OrderBy(car => CalculateDistance(car.Location.Latitude, car.Location.Longitude, source.Location.Latitude, source.Location.Longitude))
+                .FirstOrDefault();
+        }
+
+        private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            double R = 6371; 
+            double dLat = (lat2 - lat1) * Math.PI / 180;
+            double dLon = (lon2 - lon1) * Math.PI / 180;
+            double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                       Math.Cos(lat1 * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
+                       Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c; // מרחק בקילומטרים
+        }
+
+
+        //private async Task<int> CalculateDistanceInCircularRoute(Station carStation, Station source)
+        //{
+        //    // הגדרת סדר התחנות במסלול
+        //    //var stations = new[] { Station.A, Station.B, Station.C, Station.D };
+        //    var stations_json = await _stationRepository.GetAllStationsAsync();
+        //    List<Station> stations = (List<Station>)stations_json.OrderBy(station => station.Id);
+
+
+        //    //להוריד את תחנה 0 , ולמיין לפי ה ID של התחנה
+
+        //    //var carIndex = Array.IndexOf(stations, carStation);
+        //    //var pickupIndex = Array.IndexOf(stations, pickupStation);
+
+        //    //if (carIndex == pickupIndex) return 0;
+
+        //    //// חישוב המרחק בכיוון התנועה
+        //    //if (carIndex < pickupIndex)
+        //    //{
+        //    //    return pickupIndex - carIndex;
+        //    //}
+        //    //else
+        //    //{
+        //    //    // אם הרכב אחרי נקודת האיסוף, צריך להשלים סיבוב
+        //    //    return (stations.Length - carIndex) + pickupIndex;
+        //    //}
+        //}
+
     }
 }
+
+
+
+
+
+
+//        public async Task<RideOrder> SearchCarToRide(int rideOrderId)
+//        {
+//            // Fetch the ride order by ID
+//            var rideOrder = await _rideOrderRepository.GetRideByIdAsync(rideOrderId);
+
+//            // Check if the ride order exists and is open
+//            if (rideOrder == null || rideOrder.Status != RideOrderStatus.Open)
+//                throw new Exception("Ride order not found or not open");
+
+//            // Retrieve available cars from the database
+//            var availableCars = await _carRepository.GetAvailableCarsAsync();
+
+//            // Select the first available car (this can be improved to find the closest car)
+//            var nearestCar = availableCars.FirstOrDefault();
+
+//            // If no cars are available, throw an error
+//            if (nearestCar == null)
+//                throw new Exception("No available cars at the moment");
+            
+//            return rideOrder; // Return the updated ride order
+//        }
+//    }
+//}
 

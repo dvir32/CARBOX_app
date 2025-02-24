@@ -103,8 +103,18 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
       body: JSON.stringify(
         {
           UserId: 50,
-          Origin: originStation,
-          Destination: destinationStation,
+          // Origin: originStation,
+          // Destination: destinationStation,
+          source: {"id": 1,
+                  "name": "A",
+                  "location": {
+                    "latitude": 0,
+                    "longitude": 0}},
+          Destination: {"id": 4,
+            "name": "D",
+            "location": {
+              "latitude": 0,
+              "longitude": 0}},
           RideTime: formattedRideTime
                 }
               )

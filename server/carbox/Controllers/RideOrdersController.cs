@@ -47,7 +47,7 @@ namespace carbox.Controllers
             var rideOrder = new RideOrder
             {
                 UserId = rideOrderRequest.UserId,
-                Origin = rideOrderRequest.Origin,
+                source = rideOrderRequest.source,
                 Destination = rideOrderRequest.Destination,
                 RideTime = rideOrderRequest.RideTime,
                 CreatedAt = GetIsraelDateTime()
@@ -79,8 +79,8 @@ namespace carbox.Controllers
         public class RideOrderRequest
         {
             public int UserId { get; set; }
-            public required string Origin { get; set; }
-            public required string Destination { get; set; }
+            public required Station source { get; set; }
+            public required Station Destination { get; set; }
             public DateTime RideTime { get; set; }
         }
     }
