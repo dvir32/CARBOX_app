@@ -39,5 +39,33 @@ namespace carbox.Repositories
         {
             await _carCollection.ReplaceOneAsync(c => c.Id == car.Id, car);
         }
+
+        //// Update battery level
+        //public async Task UpdateBatteryLevelAsync(string id, int batteryLevel)
+        //{
+        //    var update = Builders<Car>.Update.Set(c => c.BatteryLevel, batteryLevel);
+        //    await _carCollection.UpdateOneAsync(c => c.Id == id, update);
+        //}
+
+        //// Update station list
+        //public async Task UpdateStationsAsync(string id, List<string> stations)
+        //{
+        //    var update = Builders<Car>.Update.Set(c => c.StopStations, stations);
+        //    await _carCollection.UpdateOneAsync(c => c.Id == id, update);
+        //}
+
+        // Get battery level
+        public async Task<int?> GetBatteryLevelAsync(string id)
+        {
+            var car = await GetCarByIdAsync(id);
+            return (int?)(car?.BatteryLevel);
+        }
+
+        // Get station list
+        public async Task<List<string>?> GetStationsAsync(string id)
+        {
+            var car = await GetCarByIdAsync(id);
+            return car?.StopStations;
+        }
     }
 }

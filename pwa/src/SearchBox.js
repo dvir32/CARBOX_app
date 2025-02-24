@@ -77,21 +77,36 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
 
   const handleClickNext = () => {
     const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    fetch("http://localhost:5000/api/RideOrders", {
+    
+    // Extract hours and minutes from the departureTime (which is in HH:MM format)
+    const [hours, minutes] = departureTime.split(":"); 
+
+    // Update the current date with the selected hours and minutes
+    now.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0); 
+
+    // Convert the local time to UTC by subtracting the timezone offset
+    const offset = now.getTimezoneOffset() * 60000; // Convert minutes to milliseconds
+    const utcTime = new Date(now.getTime() - offset);
+
+    // Format the date as ISO 8601 (YYYY-MM-DDTHH:MM:SSZ)
+    const formattedRideTime = utcTime.toISOString(); // This ensures the time is in UTC
+
+    console.log(formattedRideTime);
+
+
+  
+
+    fetch("https://localhost:7158/api/RideOrders", {
       method: "POST", 
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(
         {
-          UserId: 30,
+          UserId: 50,
           Origin: originStation,
           Destination: destinationStation,
-          RideTime: {
-            date: departureTime
-          }
+          RideTime: formattedRideTime
                 }
               )
             })
@@ -208,5 +223,3 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
 }
 
 export default SearchBox; 
-
-
