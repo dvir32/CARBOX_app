@@ -8,6 +8,11 @@ namespace carbox.Models
         public Location Location { get; set; }  // Vehicle location
         public double BatteryLevel { get; set; } // Battery percentage
         public List<Station> StopStations { get; set; } = new List<Station>(); // List of stop stations
+
+        public int lastStation()
+        {
+            return StopStations[0].Id - 1;
+        }
     }
 
     public enum CarStatus

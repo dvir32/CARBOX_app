@@ -62,7 +62,7 @@ namespace carbox.Repositories
         }
 
         // Get station list
-        public async Task<List<string>?> GetStationsAsync(string id)
+        public async Task<List<Station>?> GetStationsAsync(string id)
         {
             var car = await GetCarByIdAsync(id);
             return car?.StopStations;
