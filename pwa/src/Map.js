@@ -15,15 +15,15 @@ function Map() {
   const dealers = [
     {
       id:1,
-      name:"Dealer One",
-      position:[-122.33, 47.6],
-      address:"123 Main St, City, State",
+      name:"A",
+      position:[34.7818, 32.0853],
+      address:"Tel Aviv",
     },
     {
       id:2,
-      name:"Dealer Two",
-      position:[-122.4, 47.55],
-      address: "456 Elm St, City, State",
+      name:"B",
+      position:[34.84643333333333, 32.071666666666665],
+      address: "Bar Ilan University",
     }
   ] 
 
@@ -33,7 +33,7 @@ function Map() {
         <div>
         {dealers.map((dealer)=>(
           <div key={dealer.id}>
-          <h2>{dealer.name}</h2>
+          <h2>Station {dealer.name}</h2>
           <p>{dealer.address}</p>
           </div>
         ))}
