@@ -11,7 +11,8 @@ import Map from './Map';
 
 function SearchBox() {
 
-  const stationsList = ['A', 'B', 'C', 'D']
+  const [stationsList, setStationsList] = useState([]);
+  const stationsList1 = ['A','B','C','D'];
   const [originStation, setOriginStation] = useState('');
   const [destinationStation, setDestinationStation] = useState('');
   const [departureTime, setDepartureTime] = useState(''); // Add a state for the time
@@ -53,6 +54,29 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
   
 
   useEffect(() => {
+    // get the station
+    fetch("https://localhost:7158/api/stations", {
+      method: "GET", 
+      headers: {
+        'Content-Type': 'application/json'
+      }})
+    .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+        
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Status updated:", data);
+        setStationsList(data)
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+
+
+
     //the defualt departure time is now
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
@@ -174,7 +198,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
         {/* Add a default option as a placeholder */}
         <option value="" disabled>
         </option>
-        {stationsList.map((option) => (
+        {stationsList1.map((option) => (
           <option key={option} value={option}>
             {option}
           </option>
@@ -197,9 +221,9 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
         {/* Add a default option as a placeholder */}
         <option value="" disabled>
         </option>
-        {stationsList.map((option) => (
-          <option key={option} value={option}>
-            {option}
+        {stationsList.map((station) => (
+          <option key={station.name} value={station.name}>
+            {station.name}
           </option>
         ))}
       </TextField>
@@ -224,7 +248,7 @@ $GPRMC,130504.037,A,3204.300,N,03450.786,E,,,260125,000.0,W*72`;
     >
       Next
     </Button>
-    <div><Map/></div>         
+    <div><Map stations={stationsList}/></div>         
       
 
     </div>

@@ -3,7 +3,7 @@ import * as atlas from 'azure-maps-control'
 import 'azure-maps-control/dist/atlas.min.css'
 import './AzureMap.css';
 
-function AzureMap({ subscriptionKey, dealers }) {
+function AzureMap({ subscriptionKey, stations }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -16,18 +16,18 @@ function AzureMap({ subscriptionKey, dealers }) {
             authType: atlas.AuthenticationType.subscriptionKey,
             subscriptionKey: subscriptionKey
           },
-          center: dealers.length > 0 ? [dealers[0].position[0], dealers[0].position[1]] : [0, 0],
-          zoom: 10,
+          center: stations.length > 0 ? [stations[0].location.longitude, stations[0].location.latitude] : [0, 0],
+          zoom: 14,
           view: 'Auto'
         });
 
         map.events.add('ready', () => {
-          dealers.forEach((element) => { 
+          stations.forEach((element) => { 
             console.log(element)
             const marker = new atlas.HtmlMarker({
               color: 'DodgerBlue',
               text: element.name, 
-              position: [element.position[0], element.position[1]]
+              position: [element.location.longitude, element.location.latitude]
             });
 
             const popup = new atlas.Popup({
@@ -57,7 +57,7 @@ function AzureMap({ subscriptionKey, dealers }) {
         }
       };
     }
-  }, [subscriptionKey, dealers]);
+  }, [subscriptionKey, stations]);
 
   return (
     <div ref={mapRef} id="map" className='w-full'></div>
