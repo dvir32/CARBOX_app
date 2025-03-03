@@ -90,16 +90,11 @@ function SearchBox() {
           UserId: 50,
           // Origin: originStation,
           // Destination: destinationStation,
-          source: {"id": 1,
-                  "name": "A",
-                  "location": {
-                    "latitude": 0,
-                    "longitude": 0}},
-          Destination: {"id": 4,
-            "name": "D",
-            "location": {
-              "latitude": 0,
-              "longitude": 0}},
+          source: {
+                  "name": originStation},
+          Destination: {
+            "name": destinationStation
+           },
           RideTime: formattedRideTime
                 }
               )
