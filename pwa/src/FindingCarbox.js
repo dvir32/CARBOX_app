@@ -15,10 +15,9 @@ function FindingCarbox() {
   return (
     <div>
     <div id='carbox-list'>
-    We found the following carbox for you
+    We found a carbox for you
     
     <CarboxCard className="grid-item" id='A1' origin='A' destination='C' departureTime='15:55' arrivalTime='16:15'/>
-    <CarboxCard className="grid-item" id='B1' origin='A' destination='C' departureTime='16:00' arrivalTime='16:20'/>
     </div>
     </div>
   );

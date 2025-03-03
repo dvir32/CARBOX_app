@@ -6,7 +6,7 @@ import { useEffect,useState } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import './CarboxCard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import CardContent from '@mui/material/CardContent';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -21,6 +21,7 @@ function CarboxCard(props) {
   return (
     
     <Card>
+
       <Card.Header>Departure Time: <strong>{departureTime}</strong> | Arrival Time: <strong>{arrivalTime}</strong></Card.Header>
       <Card.Body>
         <Card.Title>CARBOX <strong>{id}</strong></Card.Title>
@@ -28,7 +29,7 @@ function CarboxCard(props) {
         
           {origin} <i class="bi bi-arrow-right"></i> {destination}
         </Card.Text>
-        <Button variant="primary">SELECT</Button>
+        <Button variant="primary">START</Button>
       </Card.Body>
     </Card>
   );

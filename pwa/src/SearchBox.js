@@ -195,8 +195,6 @@ function SearchBox() {
       Next
     </Button>
     <div><Map stations={stationsList} userLocation={userLocation}/></div>         
-      
-
     </div>
   );
   
