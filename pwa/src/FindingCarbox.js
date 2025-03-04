@@ -1,10 +1,5 @@
 
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { useEffect,useState } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
 import './FindingCarbox.css';
 import CarboxCard from './CarboxCard';
 

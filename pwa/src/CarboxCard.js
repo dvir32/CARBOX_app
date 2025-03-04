@@ -1,13 +1,8 @@
 
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import { useEffect,useState } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
 import './CarboxCard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import CardContent from '@mui/material/CardContent';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 
