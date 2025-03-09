@@ -3,6 +3,7 @@ using carbox.Repositories;
 using System;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Collections.Generic;
 
 namespace carbox.Services
 {
@@ -12,6 +13,7 @@ namespace carbox.Services
         private readonly RideOrderRepository _rideOrderRepository; // Database repository for ride orders
         private readonly CarRepository _carRepository; // Database repository for cars
         private readonly StationRepository _stationRepository;
+        //private readonly RouteService _routeService;
         Random rnd = new Random();
 
         // Constructor - injects repositories
@@ -95,7 +97,7 @@ namespace carbox.Services
             var nearestCar = FindNearestCarInCircularRoute(availableCars, rideOrder.source);
 
             // עדכון הנסיעה עם הרכב שנבחר
-            AssignCarToRide(nearestCar, rideOrder);
+            AssignCarToRide(nearestCar.Result, rideOrder);
             //rideOrder.CarId = nearestCar.Id;
             //rideOrder.Status = RideOrderStatus.CarAssigned;
             //await _rideOrderRepository.UpdateRideAsync(rideOrder);
@@ -103,11 +105,10 @@ namespace carbox.Services
             return rideOrder;
         }
 
-        private Car FindNearestCarInCircularRoute(List<Car> availableCars, Station source)
+        private async Task<Car> FindNearestCarInCircularRoute(List<Car> availableCars, Station source)
         {
-            return availableCars
-                .OrderBy(car => CalculateDistance(car.Location.Latitude, car.Location.Longitude, source.Location.Latitude, source.Location.Longitude))
-                .FirstOrDefault();
+            return await CalculateDistanceInCircularRoute(availableCars, source);
+
         }
 
         private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
@@ -123,32 +124,34 @@ namespace carbox.Services
         }
 
 
-        //private async Task<int> CalculateDistanceInCircularRoute(Station carStation, Station source)
-        //{
-        //    // הגדרת סדר התחנות במסלול
-        //    //var stations = new[] { Station.A, Station.B, Station.C, Station.D };
-        //    var stations_json = await _stationRepository.GetAllStationsAsync();
-        //    List<Station> stations = (List<Station>)stations_json.OrderBy(station => station.Id);
+        //private async Task<List<Car> CalculateDistanceInCircularRoute(List<Car> availableCars, Station source)
+        private async Task<Car> CalculateDistanceInCircularRoute(List<Car> availableCars, Station source)
+        {
+            //רשימת הרכבים לפי הקרבה לתחנת המוצא
+            availableCars = (List<Car>)availableCars.OrderBy(car => CalculateDistance(car.Location.Latitude, car.Location.Longitude, source.Location.Latitude, source.Location.Longitude));
 
+            // הגדרת סדר התחנות במסלול
+            //var stations = new[] { Station.A, Station.B, Station.C, Station.D };
+            var stations_json = await _stationRepository.GetAllStationsAsync();
+            List<Station> stations = (List<Station>)stations_json.OrderBy(station => station.Id);
 
-        //    //להוריד את תחנה 0 , ולמיין לפי ה ID של התחנה
+            return availableCars.FirstOrDefault();
+            //var carIndex = Array.IndexOf(stations, carStation);
+            //var pickupIndex = Array.IndexOf(stations, pickupStation);
 
-        //    //var carIndex = Array.IndexOf(stations, carStation);
-        //    //var pickupIndex = Array.IndexOf(stations, pickupStation);
+            //if (carIndex == pickupIndex) return 0;
 
-        //    //if (carIndex == pickupIndex) return 0;
-
-        //    //// חישוב המרחק בכיוון התנועה
-        //    //if (carIndex < pickupIndex)
-        //    //{
-        //    //    return pickupIndex - carIndex;
-        //    //}
-        //    //else
-        //    //{
-        //    //    // אם הרכב אחרי נקודת האיסוף, צריך להשלים סיבוב
-        //    //    return (stations.Length - carIndex) + pickupIndex;
-        //    //}
-        //}
+            //// חישוב המרחק בכיוון התנועה
+            //if (carIndex < pickupIndex)
+            //{
+            //    return pickupIndex - carIndex;
+            //}
+            //else
+            //{
+            //    // אם הרכב אחרי נקודת האיסוף, צריך להשלים סיבוב
+            //    return (stations.Length - carIndex) + pickupIndex;
+            //}
+        }
 
     }
 }

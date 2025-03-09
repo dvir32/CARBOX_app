@@ -5,6 +5,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using carbox.Models;
+    using carbox.Services;
     //using MongoDB.Bson.IO;
     using MongoDB.Driver;
     using MQTTnet;
@@ -17,6 +18,7 @@
         private readonly IMqttClient _mqttClient;
         private readonly MqttClientOptions _mqttClientOptions;
         private readonly IMongoCollection<Car> _carCollection;
+        private readonly CarService _carService; 
 
         public MqttService(MongoDBService mongoDBService)
         {
@@ -103,6 +105,8 @@
             if (result.MatchedCount > 0)
             {
                 Console.WriteLine($"Updated location for car ID {update.Id}");
+                await _carService.UpdateLastStationAsync(update.Id);
+
             }
             else
             {
