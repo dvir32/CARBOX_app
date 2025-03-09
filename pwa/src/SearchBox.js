@@ -17,6 +17,10 @@
     const [departureTime, setDepartureTime] = useState(''); // Add a state for the time
     const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });  
     const [isLoading, setIsLoading] = useState(false);
+    const [formattedRideTime, setFormattedRideTime] = useState('');
+    const [findingCarbox, setFindingCarbox] = useState(false);
+    
+    const navigate = useNavigate();
 
     useEffect(() => {
       // get the station
@@ -39,9 +43,6 @@
         .catch((error) => {
           console.error("Fetch error:", error);
         });
-
-
-
       //the defualt departure time is now
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, '0');
@@ -60,9 +61,8 @@
       
     }, []);
 
-    const navigate = useNavigate();
 
-    async function handleClickNext () {
+    function handleClickNext () {
       setIsLoading(true);
       const now = new Date();
       
@@ -77,54 +77,60 @@
       const utcTime = new Date(now.getTime() - offset);
 
       // Format the date as ISO 8601 (YYYY-MM-DDTHH:MM:SSZ)
-      const formattedRideTime = utcTime.toISOString(); // This ensures the time is in UTC
-
-      console.log(isLoading);
-
-      setIsLoading(true);
-      const r = await fetch("https://localhost:7158/api/RideOrders", {
-        method: "POST", 
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(
-          {
-            UserId: 50,
-            // Origin: originStation,
-            // Destination: destinationStation,
-            source: {
-                    "name": originStation},
-            Destination: {
-              "name": destinationStation
-            },
-            RideTime: formattedRideTime
-                  }
-                )
-              })
-        const response = await r.json();
-        console.log(isLoading)
-        if (!response.ok) {
-          setTimeout(() => {
-            console.log("Delayed for 1 second.");
-            console.log(isLoading)
-          }, 10000);
-          
-          //throw new Error(`Server error: ${response.status}`);
-        }
-        if (!isLoading){
-          navigate('/FindingCarbox', {
-            state: {
-              originStation: originStation,
-              destinationStation:destinationStation,
-              departureTime:departureTime
-            }
-          });
-        }
-
-        
+      setFormattedRideTime(utcTime.toISOString()); // This ensures the time is in UTC
     };
 
+     useEffect(() => {
+      
+      if(isLoading){
+        fetch("https://localhost:7158/api/RideOrders", {
+            method: "POST", 
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(
+              {
+                UserId: 50,
+                // Origin: originStation,
+                // Destination: destinationStation,
+                source: {
+                        "name": originStation},
+                Destination: {
+                  "name": destinationStation
+                },
+                RideTime: formattedRideTime
+                      }
+                    )
+                  }).then((response) => {
+                    console.log(formattedRideTime)
+                    if (!response.ok) {
+                      throw new Error(`Server error: ${response.status}`);
+                    }
+                    
+                    return response.json();
+                  })
+                  .then((data) => {
+                    setIsLoading(false)
+                    setFindingCarbox(true) // or set the data from the server
+                    console.log("Status updated:", data);
+                  })
+                  .catch((error) => {
+                    console.error("Fetch error:", error);
+                  });
+                }
+    }, [isLoading]);
+
     const isFormValid = originStation !== '' && destinationStation !== ''; 
+
+    if (!isLoading && findingCarbox){
+      navigate('/FindingCarbox', {
+        state: {
+          originStation: originStation,
+          destinationStation:destinationStation,
+          departureTime:departureTime
+        }
+      });
+    }
 
     return (
       
