@@ -102,7 +102,6 @@
                       }
                     )
                   }).then((response) => {
-                    console.log(formattedRideTime)
                     if (!response.ok) {
                       throw new Error(`Server error: ${response.status}`);
                     }
@@ -111,13 +110,15 @@
                   })
                   .then((data) => {
                     setIsLoading(false)
-                    setFindingCarbox(true) // or set the data from the server
+                    setFindingCarbox(true) 
+                    // set the data from the server
                     console.log("Status updated:", data);
                   })
                   .catch((error) => {
                     console.error("Fetch error:", error);
                   });
                 }
+                
     }, [isLoading]);
 
     const isFormValid = originStation !== '' && destinationStation !== ''; 
