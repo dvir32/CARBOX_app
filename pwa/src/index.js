@@ -7,6 +7,7 @@ import SearchBox from './SearchBox';
 import LoadingPage from './LoadingPage';
 import FindingCarbox from './FindingCarbox';
 import CarboxArrived from './CarboxArrived';
+import QRScanner from './QRScanner';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
@@ -18,6 +19,7 @@ root.render(
       <Route path="/LoadingPage" element={<LoadingPage />} />
       <Route path="/FindingCarbox" element={<FindingCarbox />} />
       <Route path="/CarboxArrived" element={<CarboxArrived />} />
+      <Route path="/QRScanner" element={<QRScanner />} />
     </Routes>
 </BrowserRouter>
 );
