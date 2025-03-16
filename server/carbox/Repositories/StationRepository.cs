@@ -25,6 +25,9 @@ namespace carbox.Repositories
             await _stationsCollection.InsertOneAsync(station);
         }
 
-
+        public async Task<Station?> GetStationByIdAsync(int id)
+        {
+            return await _stationsCollection.Find(s => s.Id == id).FirstOrDefaultAsync();
+        }
     }
 }
