@@ -1,5 +1,6 @@
 ﻿using carbox.Models;
 using MongoDB.Driver;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace carbox.Repositories
@@ -13,13 +14,22 @@ namespace carbox.Repositories
             _routes = database.GetCollection<Models.Route>("Routes");
         }
 
-        // Get a route by its ID
-        public async Task<Models.Route> GetRouteByIdAsync(int routeId)
+        public async Task<Models.Route> AddRouteAsync(Models.Route route)
         {
-            return await _routes.Find(route => route.Id == routeId).FirstOrDefaultAsync();
+            await _routes.InsertOneAsync(route);
+            return route;
         }
 
-        // Update an existing route
+        public async Task<List<Models.Route>> GetAllRoutesAsync()
+        {
+            return await _routes.Find(_ => true).ToListAsync();
+        }
+
+        public async Task<Models.Route> GetRouteByIdAsync(int id)
+        {
+            return await _routes.Find(route => route.Id == id).FirstOrDefaultAsync();
+        }
+
         public async Task UpdateRouteAsync(Models.Route route)
         {
             await _routes.ReplaceOneAsync(r => r.Id == route.Id, route);
