@@ -103,6 +103,8 @@
                     )
                   }).then((response) => {
                     if (!response.ok) {
+                    //setIsLoading(false)
+                    //setFindingCarbox(true) 
                       throw new Error(`Server error: ${response.status}`);
                     }
                     
