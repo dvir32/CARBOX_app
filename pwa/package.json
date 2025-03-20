@@ -1,6 +1,7 @@
 {
   "name": "pwa",
   "version": "0.1.0",
+  "homepage": "https://dvir32.github.io/CARBOX_app",
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^3.2.0",
@@ -47,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }
