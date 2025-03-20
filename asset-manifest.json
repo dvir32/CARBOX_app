@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/CARBOX_app/static/css/main.9c501b44.css",
+    "main.js": "/CARBOX_app/static/js/main.5af9b1e3.js",
+    "static/js/136.02ffe90e.chunk.js": "/CARBOX_app/static/js/136.02ffe90e.chunk.js",
+    "static/media/bootstrap-icons.woff?": "/CARBOX_app/static/media/bootstrap-icons.39795c0b4513de014cf8.woff",
+    "static/media/bootstrap-icons.woff2?": "/CARBOX_app/static/media/bootstrap-icons.b7bcc075b395c14ce8c2.woff2",
+    "service-worker.js": "/CARBOX_app/service-worker.js",
+    "index.html": "/CARBOX_app/index.html",
+    "main.9c501b44.css.map": "/CARBOX_app/static/css/main.9c501b44.css.map",
+    "main.5af9b1e3.js.map": "/CARBOX_app/static/js/main.5af9b1e3.js.map",
+    "136.02ffe90e.chunk.js.map": "/CARBOX_app/static/js/136.02ffe90e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9c501b44.css",
+    "static/js/main.5af9b1e3.js"
+  ]
+}
