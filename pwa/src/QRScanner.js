@@ -26,6 +26,34 @@ function QRScanner() {
     }
    },[])
 
+   useEffect(() => {
+    if (scannerResult != null){
+      fetch("https://localhost:7158/api/scanner", { // cange to the correct api
+        method: "POST", 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+          {
+            Carbox: scannerResult  
+          })})
+      .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+          }
+          
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Status updated:", data);
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+        });
+    }
+    
+   },[scannerResult])
+
   
 
   return (
