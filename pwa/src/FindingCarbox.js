@@ -5,10 +5,13 @@ import CarboxCard from './CarboxCard';
 import { useLocation} from "react-router-dom";
 
 function FindingCarbox() {
-  const location = useLocation();
-  const originStation = location.state.originStation;
-  const destinationStation = location.state.destinationStation;
-  const departureTime = location.state.departureTime;
+  // const location = useLocation();
+  // const originStation = location.state.originStation;
+  // const destinationStation = location.state.destinationStation;
+  // const departureTime = location.state.departureTime;
+  const originStation = 'A'
+  const destinationStation = 'C'
+  const departureTime = "16:00"
 
 
 
