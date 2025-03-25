@@ -23,6 +23,7 @@ namespace carbox.Models
     {
         Available=0 ,  // Available
         Occupied =1 ,   // Occupied
-        Maintenance =2 
+        Maintenance =2,
+        Waiting = 3 
     }
 }

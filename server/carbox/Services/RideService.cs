@@ -19,10 +19,11 @@ namespace carbox.Services
         Random rnd = new Random();
 
         // Constructor - injects repositories
-        public RideService(RideOrderRepository rideOrderRepository, CarRepository carRepository)
+        public RideService(RideOrderRepository rideOrderRepository, CarRepository carRepository, RouteRepository routeRepository)
         {
             _rideOrderRepository = rideOrderRepository;
             _carRepository = carRepository;
+            _routeRepository = routeRepository;
         }
 
         // Adds a new ride order to the database
@@ -87,56 +88,38 @@ namespace carbox.Services
             if (rideOrder == null || rideOrder.Status != RideOrderStatus.Open)
                 throw new InvalidOperationException("Ride order not found or not open");
             
-            var selectedCar = new Car();
+            // Get all available cars
+            var availableCars = await _carRepository.GetAvailableCarsAsync();
+            if (!availableCars.Any())
+                throw new InvalidOperationException("No available cars at the moment");
 
-            //  בדיקה אם הנסיעה היא נסיעה עתידית או מיידית (טווח של רבע שעה)
-            bool isFutureRide = rideOrder.RideTime > DateTime.Now.AddMinutes(15);
+            // Filter cars with battery percentage higher than 40%
+            var carsWithSufficientBattery = availableCars.Where(car => car.BatteryLevel > 40).ToList();
+            if (!carsWithSufficientBattery.Any())
+                throw new InvalidOperationException("No cars with sufficient battery available");
 
-            if (!isFutureRide)
-            {
-                // Get all available cars
-                var availableCars = await _carRepository.GetAvailableCarsAsync();
-                if (!availableCars.Any())
-                    throw new InvalidOperationException("No available cars at the moment");
+            // Sort cars by their last station in descending and circular order from the requested station
+            int startStation = rideOrder.source.Id;
+            List<Car> sortedCars = CircularSortByStartNumber(carsWithSufficientBattery, startStation);
+            if (!sortedCars.Any())
+                throw new InvalidOperationException("No suitable cars near the requested station");
 
-                // Filter cars with battery percentage higher than 40%
-                var carsWithSufficientBattery = availableCars.Where(car => car.BatteryLevel > 40).ToList();
-                if (!carsWithSufficientBattery.Any())
-                    throw new InvalidOperationException("No cars with sufficient battery available");
+            // Get the travel time between the last station and pickup station from the time matrix
+            var route = (await _routeRepository.GetAllRoutesAsync()).FirstOrDefault();
+            int travelTime = route.travelTimeMatrix.GetTravelTime(sortedCars.First().LastStation.Id, rideOrder.source.Id);
 
-                // Sort cars by their last station in descending and circular order from the requested station
-                int startStation = rideOrder.source.Id;
-                List<Car> sortedCars = CircularSortByStartNumber(carsWithSufficientBattery, startStation);
-                if (!sortedCars.Any())
-                    throw new InvalidOperationException("No suitable cars near the requested station");
-       
-                // Get the travel time between the last station and pickup station from the time matrix
-                int travelTime = timeMatrix[sortedCars.First().LastStation, rideOrder.source];
+            // Check if the travel time is less than or equal to the maximum allowed time
+            if (DateTime.Now.AddMinutes(travelTime) > rideOrder.RideTime)
+                throw new InvalidOperationException("No CARBOX was found that could arrive at the desired time");
 
-                // Check if the travel time is less than or equal to the maximum allowed time
-                if (DateTime.Now.AddMinutes(travelTime) > rideOrder.RideTime)
-                    throw new InvalidOperationException("No CARBOX was found that could arrive at the desired time");
-
-                selectedCar = sortedCars.First();
-            }
-
-            else
-            {
-                var Cars = await _carRepository.GetAllCarsAsync();
-
-                var filteredCars = Cars.Where(car =>
-                    //בדיקה שאין חפיפה עם נסיעות אחרות
-                    !car.ScheduledTrips.Any(trip =>
-                        rideOrder.RideTime < trip.EndTime && rideOrder.RideTime.AddMinutes(rideOrder.EstimatedDuration) > trip.StartTime)
-
-                    //עדיפות לרכבים עם פחות עומס
-                    && car.ScheduledTrips.Count < 5
-            ).OrderBy(car => car.ScheduledTrips.Count).ToList();
-                selectedCar = filteredCars.First();
-            }
+            var selectedCar = sortedCars.First();
 
             // Update the ride with the selected car
-            AssignCarToRide(selectedCar, rideOrder);
+            await AssignCarToRide(selectedCar, rideOrder);
+
+            // Check if the travel is a future ride (over 15 minutes of waiting)
+            if (rideOrder.RideTime > DateTime.Now.AddMinutes(15))
+                selectedCar.Status = CarStatus.Waiting;            
 
             return rideOrder;
         }
