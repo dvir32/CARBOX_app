@@ -4,16 +4,27 @@ using carbox.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add MongoDBService
 builder.Services.AddSingleton<MongoDBService>();
+builder.Services.AddScoped(provider =>
+{
+    var mongoDBService = provider.GetRequiredService<MongoDBService>();
+    return mongoDBService.Database;
+});
+
 
 // Add MQTTClientService as a Background Service
 builder.Services.AddHostedService<MqttService>();
+builder.Services.AddScoped<CarService>();
 
 builder.Services.AddScoped<RideOrderRepository>();
 builder.Services.AddScoped<CarRepository>();
 builder.Services.AddScoped<StationRepository>();
+builder.Services.AddScoped<RouteRepository>();
 builder.Services.AddScoped<RideService>();
+
+
 
 // Add services to the container.
 builder.Services.AddControllers();

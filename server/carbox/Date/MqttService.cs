@@ -19,11 +19,11 @@ namespace carbox.Services
         private readonly StationRepository _stationRepository;
         private readonly CarService _carService;
 
-        public MqttService(CarRepository carRepository, CarService carService, StationRepository stationRepository)
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+
+        public MqttService(IServiceScopeFactory serviceScopeFactory)
         {
-            _carRepository = carRepository;
-            _carService = carService;
-            _stationRepository = stationRepository;
+            _serviceScopeFactory = serviceScopeFactory;
 
             var mqttFactory = new MqttClientFactory();
             _mqttClient = mqttFactory.CreateMqttClient();
@@ -63,69 +63,90 @@ namespace carbox.Services
 
         private async Task OnMessageReceived(MqttApplicationMessageReceivedEventArgs e)
         {
-            var topic = e.ApplicationMessage.Topic;
-            var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload.ToArray());
-            Console.WriteLine($"Received message from topic '{topic}': {payload}");
-
-            try
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                var carMassage = JsonConvert.DeserializeObject<CarMassage>(payload);
-                if (carMassage != null)
+                var carRepository = scope.ServiceProvider.GetRequiredService<CarRepository>(); 
+                var carService = scope.ServiceProvider.GetRequiredService<CarService>(); 
+
+                var topic = e.ApplicationMessage.Topic;
+                var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload.ToArray());
+                Console.WriteLine($"Received message from topic '{topic}': {payload}");
+
+                try
                 {
-                    await UpdateCarLocation(carMassage);
+                    var carMassage = JsonConvert.DeserializeObject<CarMassage>(payload);
+                    if (carMassage != null)
+                    {
+                        await UpdateCarLocation(carMassage); // UpdateCarLocation כבר מטפל ב- Scoped Services כמו שצריך
+                    }
+                    else
+                    {
+                        Console.WriteLine("Warning: Received an empty or invalid CarMassage object.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error parsing payload: {ex.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error parsing payload: {ex.Message}");
-            }
         }
+
 
         private async Task UpdateCarLocation(CarMassage update)
         {
-            var car = await _carRepository.GetCarByIdAsync(update.Id);
-            if (car != null)
+            using (var scope = _serviceScopeFactory.CreateScope())
             {
-                car.Location = new Location { Latitude = update.Latitude, Longitude = update.Longitude };
-                var station = await _stationRepository.GetStationByIdAsync(update.LastStationID);
-                if (station != null)
+                var carRepository = scope.ServiceProvider.GetRequiredService<CarRepository>();
+                var stationRepository = scope.ServiceProvider.GetRequiredService<StationRepository>();
+                var carService = scope.ServiceProvider.GetRequiredService<CarService>();
+
+                var car = await carRepository.GetCarByIdAsync(update.Id);
+                if (car != null)
                 {
-                    car.LastStation = station;
+                    car.Location = new Location { Latitude = update.Latitude, Longitude = update.Longitude };
+
+                    var station = await stationRepository.GetStationByIdAsync(update.LastStationID);
+                    if (station != null)
+                    {
+                        car.LastStation = station;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Station ID {update.LastStationID} not found.");
+                    }
+
+                    if (Enum.IsDefined(typeof(CarStatus), update.Status))
+                    {
+                        car.Status = (CarStatus)update.Status;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid status value: {update.Status}");
+                    }
+
+                    car.BatteryLevel = update.BatteryLevel;
+
+                    await carRepository.UpdateCarAsync(car);
+                    Console.WriteLine($"Updated location for car ID {update.Id}");
+
+                    await carService.UpdateLastStationAsync(update.Id);
                 }
                 else
                 {
-                    Console.WriteLine($"Station ID {update.LastStationID} not found.");
+                    Console.WriteLine($"Car ID {update.Id} not found in repository.");
                 }
-
-                if (Enum.IsDefined(typeof(CarStatus), update.Status))
-                {
-                    car.Status = (CarStatus)update.Status;
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid status value: {update.Status}");
-                }
-
-                await _carRepository.UpdateCarAsync(car);
-                Console.WriteLine($"Updated location for car ID {update.Id}");
-                await _carService.UpdateLastStationAsync(update.Id);
-                car.BatteryLevel = update.BatteryLevel;
-            }
-            else
-            {
-                Console.WriteLine($"Car ID {update.Id} not found in repository.");
             }
         }
-    }
 
-    public class CarMassage
-    {
-        public string Id { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public int LastStationID { get; set; }
-        public int Status { get; set; }
-        public int BatteryLevel { get; set; }
-        public DateTime Timestamp { get; set; }
+        public class CarMassage
+        {
+            public string Id { get; set; }
+            public double Latitude { get; set; }
+            public double Longitude { get; set; }
+            public int LastStationID { get; set; }
+            public int Status { get; set; }
+            public int BatteryLevel { get; set; }
+            public DateTime Timestamp { get; set; }
+        }
     }
 }

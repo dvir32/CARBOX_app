@@ -8,11 +8,11 @@ namespace carbox.Repositories
     public class RouteRepository
     {
         private readonly IMongoCollection<Models.Route> _routes;
-
         public RouteRepository(IMongoDatabase database)
         {
             _routes = database.GetCollection<Models.Route>("Routes");
         }
+
 
         public async Task<Models.Route> AddRouteAsync(Models.Route route)
         {
@@ -22,7 +22,7 @@ namespace carbox.Repositories
 
         public async Task<List<Models.Route>> GetAllRoutesAsync()
         {
-            return await _routes.Find(_ => true).ToListAsync();
+            return await _routes.Find(route => true).ToListAsync();
         }
 
         public async Task<Models.Route> GetRouteByIdAsync(int id)

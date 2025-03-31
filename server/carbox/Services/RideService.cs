@@ -15,7 +15,6 @@ namespace carbox.Services
         private readonly CarRepository _carRepository; // Database repository for cars
         private readonly StationRepository _stationRepository;
         private readonly RouteRepository _routeRepository;
-        //private readonly RouteService _routeService;
         Random rnd = new Random();
 
         // Constructor - injects repositories
@@ -106,7 +105,7 @@ namespace carbox.Services
 
             // Get the travel time between the last station and pickup station from the time matrix
             var route = (await _routeRepository.GetAllRoutesAsync()).FirstOrDefault();
-            int travelTime = route.travelTimeMatrix.GetTravelTime(sortedCars.First().LastStation.Id, rideOrder.source.Id);
+            int travelTime = route.GetTravelTime(sortedCars.First().LastStation.Id, rideOrder.source.Id);
 
             // Check if the travel time is less than or equal to the maximum allowed time
             if (DateTime.Now.AddMinutes(travelTime) > rideOrder.RideTime)

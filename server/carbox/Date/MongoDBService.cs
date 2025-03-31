@@ -1,6 +1,9 @@
 ﻿namespace carbox.Date
 {
     using MongoDB.Driver;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    
 
     public class MongoDBService
     {
@@ -11,8 +14,8 @@
         {
             _configuration = config;
 
-            var connectionStrint = _configuration.GetConnectionString("DbConnection");
-            var mongoUrl = MongoUrl.Create(connectionStrint);
+            var connectionString = _configuration.GetConnectionString("DbConnection");
+            var mongoUrl = MongoUrl.Create(connectionString);
             var mongoClient = new MongoClient(mongoUrl);
             _database = mongoClient.GetDatabase("carboxDB");
             Console.WriteLine("_database: " + _database);
