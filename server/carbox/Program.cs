@@ -29,6 +29,12 @@ builder.Services.AddScoped<RideService>();
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
+
+
 // CORS
 builder.Services.AddCors(options =>
 {
