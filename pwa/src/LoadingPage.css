@@ -1,0 +1,11 @@
+
+#loading-box{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  flex-direction: column;
+  align-items: stretch;
+  margin-top: 30px;
+  gap: 30px;
+  align-items: center;
+}
