@@ -10,19 +10,22 @@ import CarboxArrived from './CarboxArrived';
 import QRScanner from './QRScanner';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import Home from './Home';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter basename="/CARBOX_app">
-        <Routes>
-            <Route path="/" element={<SearchBox />} />
-            <Route path="/LoadingPage" element={<LoadingPage />} />
-            <Route path="/FindingCarbox" element={<FindingCarbox />} />
-            <Route path="/CarboxArrived" element={<CarboxArrived />} />
-            <Route path="/QRScanner" element={<QRScanner />} />
-        </Routes>
+        <App>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/SearchBox" element={<SearchBox />} />
+                <Route path="/LoadingPage" element={<LoadingPage />} />
+                <Route path="/FindingCarbox" element={<FindingCarbox />} />
+                <Route path="/CarboxArrived" element={<CarboxArrived />} />
+                <Route path="/QRScanner" element={<QRScanner />} />
+            </Routes>
+        </App>
     </BrowserRouter>
-
 );
 
 // If you want your app to work offline and load faster, you can change

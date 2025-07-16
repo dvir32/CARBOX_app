@@ -7,6 +7,11 @@
   import './SearchBox.css';
   import Map from './Map';
   import LoadingPage from './LoadingPage';
+  import Card from '@mui/material/Card';
+  import CardContent from '@mui/material/CardContent';
+  import Container from '@mui/material/Container';
+  import Typography from '@mui/material/Typography';
+  import MenuItem from '@mui/material/MenuItem';
 
   function SearchBox() {
 
@@ -23,7 +28,7 @@
 
     useEffect(() => {
       // get the station
-      fetch("http://localhost:5269/api/stations", {
+      fetch("https://carbox-server-new-1.onrender.com/api/stations", {
         method: "GET", 
         headers: {
           'Content-Type': 'application/json'
@@ -84,7 +89,8 @@
       if(isLoading){
         const sourceStation = stationsList.find(item => item.name === originStation);
         const destStation = stationsList.find(item => item.name === destinationStation);
-        fetch("http://localhost:5269/api/RideOrders", {
+        console.log("hey sean")
+        fetch("https://carbox-server-new-1.onrender.com/api/RideOrders", {
             method: "POST", 
             headers: {
               'Content-Type': 'application/json'
@@ -129,99 +135,187 @@
     }, [isLoading]);
 
     const isFormValid = originStation !== '' && destinationStation !== ''; 
-/*
-    if (!isLoading && findingCarbox){
-      navigate('/FindingCarbox', {
-        state: {
-          originStation: originStation,
-          destinationStation:destinationStation,
-          departureTime:departureTime,
-        }
-      });
-    }*/
+
 
     return (
-      
-      
-      <div >
+    <Box sx={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%)',
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      position: 'relative',
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
+        pointerEvents: 'none',
+      }
+    }}>
       {!isLoading && (
-        <div id='search-box'>
-      <TextField
-          className="search-field"
-          id="outlined-select-currency-native"
-          select
-          label="Select your origin"
-          value={originStation} // Set value to originStation state
-          onChange={(e) => setOriginStation(e.target.value)} // Update state on change
-          slotProps={{
-            select: {
-              native: true,
-            },
-          }}
-        >
-          {/* Add a default option as a placeholder */}
-          <option value="" disabled>
-          </option>
-          {stationsList.map((station) => (
-            <option key={station.name} value={station.name}>
-              {station.name}
-            </option>
-          ))}
-        </TextField>
-
-        <TextField
-          className="search-field"
-          id="outlined-select-currency-native"
-          select
-          label="Select your destination"
-          value={destinationStation} // Set value to originStation state
-          onChange={(e) => setDestinationStation(e.target.value)} // Update state on change
-          slotProps={{
-            select: {
-              native: true,
-            },
-          }}
-        >
-          {/* Add a default option as a placeholder */}
-          <option value="" disabled>
-          </option>
-          {stationsList.map((station) => (
-            <option key={station.name} value={station.name}>
-              {station.name}
-            </option>
-          ))}
-        </TextField>
-        <TextField
-          className="search-field"
-          id="outlined-time"
-          type="time"
-          label="Select departure time"
-          value={departureTime}
-          onChange={(e) => setDepartureTime(e.target.value)}
-          InputLabelProps={{
-            shrink: true, // Ensures the label stays above the input
-          }}
-          inputProps={{
-            step: 300, // Adjust step for time format (in seconds)
-          }}
-        />
-        <Box sx={{ flex: '1 1 auto' }} />
-        <Button onClick={handleClickNext}
-        sx={{ mr: 1 }}
-        disabled={!isFormValid} // Disable the button if form is invalid
-      >
-        Next
-      </Button>
-      <div><Map stations={stationsList} userLocation={userLocation}/></div>
-      </div>
-    )}
+        <Container maxWidth="sm">
+          <Card sx={{ 
+            p: 4, 
+            borderRadius: 4, 
+            boxShadow: '0 20px 40px rgba(13, 71, 161, 0.2)',
+            background: 'linear-gradient(135deg, #ffffff 0%, #fafafa 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(10px)',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '4px',
+              background: 'linear-gradient(90deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%)',
+            }
+          }}>
+            <CardContent>
+              <Typography 
+                variant="h4" 
+                align="center" 
+                gutterBottom 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: '#0d47a1',
+                  textShadow: '0 2px 4px rgba(13, 71, 161, 0.1)',
+                  mb: 3
+                }}
+              >
+                Search for a Ride
+              </Typography>
+              <Box id='search-box'>
+                <TextField
+                  className="search-field"
+                  select
+                  label="Select your origin"
+                  value={originStation}
+                  onChange={(e) => setOriginStation(e.target.value)}
+                  sx={{ 
+                    mb: 2, 
+                    width: '100%',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#0d47a1',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#0d47a1',
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="" disabled>
+                    Select your origin
+                  </MenuItem>
+                  {stationsList.map((station) => (
+                    <MenuItem key={station.name} value={station.name}>
+                      {station.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  className="search-field"
+                  select
+                  label="Select your destination"
+                  value={destinationStation}
+                  onChange={(e) => setDestinationStation(e.target.value)}
+                  sx={{ 
+                    mb: 2, 
+                    width: '100%',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#0d47a1',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#0d47a1',
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="" disabled>
+                    Select your destination
+                  </MenuItem>
+                  {stationsList.map((station) => (
+                    <MenuItem key={station.name} value={station.name}>
+                      {station.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  className="search-field"
+                  id="outlined-time"
+                  type="time"
+                  label="Select departure time"
+                  value={departureTime}
+                  onChange={(e) => setDepartureTime(e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  inputProps={{ step: 300 }}
+                  sx={{ 
+                    mb: 2, 
+                    width: '100%',
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#0d47a1',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#0d47a1',
+                      },
+                    },
+                  }}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                  <Button
+                    onClick={handleClickNext}
+                    disabled={!isFormValid}
+                    sx={{
+                      background: 'linear-gradient(135deg, #0d47a1 0%, #1565c0 100%)',
+                      color: '#fff',
+                      borderRadius: 3,
+                      boxShadow: '0 8px 25px rgba(13, 71, 161, 0.4)',
+                      px: 4,
+                      py: 1.5,
+                      fontWeight: 'bold',
+                      textTransform: 'none',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, #0a3d8f 0%, #0d47a1 100%)',
+                        boxShadow: '0 12px 35px rgba(13, 71, 161, 0.5)',
+                        transform: 'translateY(-2px)',
+                      },
+                      '&:disabled': {
+                        background: '#e0e0e0',
+                        color: '#9e9e9e',
+                        boxShadow: 'none',
+                        transform: 'none',
+                      },
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Box>
+                <div><Map stations={stationsList} userLocation={userLocation}/></div>
+              </Box>
+            </CardContent>
+          </Card>
+        </Container>
+      )}
       {isLoading && (
         <div className="loading-container">
           <LoadingPage />
         </div>
-      )}        
-      </div>
-    );
+      )}
+    </Box>
+  );
     
   }
 
