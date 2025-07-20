@@ -21,9 +21,9 @@ namespace carbox.Models
 
     public enum CarStatus
     {
-        Available=0 ,  // Available
-        Occupied =1 ,   // Occupied
-        Maintenance =2,
-        Waiting = 3 
+        Available=0 ,
+        Waiting =1 ,
+        Occupied =2,
+        Maintenance = 3 
     }
 }

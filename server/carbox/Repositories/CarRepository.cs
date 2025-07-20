@@ -10,12 +10,10 @@ namespace carbox.Repositories
     {
         private readonly IMongoCollection<Car> _carCollection;
 
-        // Constructor: Initialize MongoDB collection
         public CarRepository(MongoDBService mongoDBService)
         {
             _carCollection = mongoDBService.Database?.GetCollection<Car>("Cars");
         }
-
 
         // Get all cars
         public async Task<List<Car>> GetAllCarsAsync()
