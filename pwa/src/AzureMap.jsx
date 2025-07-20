@@ -5,20 +5,20 @@ import './AzureMap.css';
 
 function AzureMap({ subscriptionKey, stations, userLocation }) {
   const mapRef = useRef(null);
+  const userLocationLogged = useRef(false);
+
+  // Log userLocation only once per page load
+  useEffect(() => {
+    if (!userLocationLogged.current && userLocation) {
+      console.log(userLocation);
+      userLocationLogged.current = true;
+    }
+  }, [userLocation]);
 
   useEffect(() => {
     let map;
 
-    if (mapRef.current) { // Check for mapRef here
-      const userLocationLogged = useRef(false);
-
-      useEffect(() => {
-        if (!userLocationLogged.current && userLocation) {
-          console.log(userLocation);
-          userLocationLogged.current = true;
-        }
-      }, [userLocation]);
-
+    if (mapRef.current) {
       const loadMap = () => {
         map = new atlas.Map(mapRef.current, {
           authOptions: {
@@ -86,7 +86,7 @@ function AzureMap({ subscriptionKey, stations, userLocation }) {
         }
       };
     }
-  }, [subscriptionKey, stations, userLocation]); // Added userLocation to dependencies
+  }, [subscriptionKey, stations, userLocation]);
 
   return <div ref={mapRef} id="map" className='w-full'></div>;
 }
