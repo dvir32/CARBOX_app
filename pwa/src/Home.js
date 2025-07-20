@@ -4,6 +4,10 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { Link } from 'react-router-dom';
 
 function Home() {
+  if (!window._logged) {
+    console.log('This will only log once');
+    window._logged = true;
+  }
   return (
     <Box
       sx={{
