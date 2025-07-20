@@ -1,11 +1,7 @@
 {
   "name": "pwa",
   "version": "0.1.0",
-<<<<<<< HEAD
-  "homepage": ".",
-=======
   "homepage": "/",
->>>>>>> a8b52a5d0b789a6ec70f0e545ae600a102a3f88e
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^3.2.0",
