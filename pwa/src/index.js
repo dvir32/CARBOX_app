@@ -1,7 +1,7 @@
 import React from 'react';
 import './index.css';
 import ReactDOM from 'react-dom/client';
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 import App from './App';
 import SearchBox from './SearchBox';
 import LoadingPage from './LoadingPage';
@@ -14,7 +14,7 @@ import Home from './Home';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <BrowserRouter>
+    <HashRouter>
         <App>
             <Routes>
                 <Route path="/" element={<Home />} />
@@ -25,7 +25,7 @@ root.render(
                 <Route path="/QRScanner" element={<QRScanner />} />
             </Routes>
         </App>
-    </BrowserRouter>
+    </HashRouter>
 );
 
 // If you want your app to work offline and load faster, you can change
