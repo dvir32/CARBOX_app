@@ -7,8 +7,55 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { useEffect } from 'react';
 
 function LoadingPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const rideOrder = location.state?.rideOrder?.result || location.state?.rideOrder;
+  const originStation = location.state?.originStation;
+  const destinationStation = location.state?.destinationStation;
+  const departureTime = location.state?.departureTime;
+
+  useEffect(() => {
+    async function createAndAssignCar() {
+      let rideOrderToUse = rideOrder;
+      try {
+        // If rideOrder.ride is missing, create the ride order first
+        if (!rideOrder?.ride) {
+          const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(rideOrder)
+          });
+          if (!response.ok) throw new Error('Failed to create ride order');
+          rideOrderToUse = await response.json();
+        }
+        // Now assign the car
+        const assignResponse = await fetch(`https://carbox-server-new-1.onrender.com/api/RideOrders/${rideOrderToUse.ride.id}/assign`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!assignResponse.ok) throw new Error('Failed to assign car');
+        const assignData = await assignResponse.json();
+        navigate('/FindingCarbox', {
+          state: {
+            originStation,
+            destinationStation,
+            departureTime,
+            rideOrder: { ...rideOrderToUse, ...assignData }
+          }
+        });
+      } catch (err) {
+        // Optionally handle error (show message, etc.)
+        // For now, just stay on loading page
+        // You could add an error message here
+      }
+    }
+    createAndAssignCar();
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <Box sx={{ 
       minHeight: '100vh', 

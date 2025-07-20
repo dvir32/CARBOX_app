@@ -13,24 +13,12 @@ function FindingCarbox() {
   const [arrival, setArrivalTime] = useState(null);
 
   useEffect(() => {
-    console.log("useEffect ran", rideOrder);
-
-    async function assignCar() {
-      console.log("rideOrder.ride.id ", rideOrder.ride.id);
-      try {
-        const response = await axios.post(`https://carbox-server-new-1.onrender.com/api/RideOrders/${rideOrder.ride.id}/assign`);
-        console.log(response);
-        setRide(response.data.ride);
-        setArrivalTime(response.data.arrival);
-      } catch (err) {
-        setError(err.response?.data?.message || "An error occurred");
-      }
-    }
-
+    // Use ride data from rideOrder directly
     if (rideOrder?.ride) {
-      assignCar();
+      setRide(rideOrder.ride);
+      setArrivalTime(rideOrder.arrival);
     } else {
-      console.log("rideOrder is missing or id is undefined");
+      setError('Ride data is missing.');
     }
   }, [rideOrder]);
 
@@ -71,7 +59,7 @@ function FindingCarbox() {
       background: 'radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
       pointerEvents: 'none',
     }
-  }}><Typography sx={{ color: '#fff', fontWeight: 'bold' }}>Looking for a carbox...</Typography></Box>;
+  }}></Box>;
 
   return (
     <Box sx={{ 
@@ -93,13 +81,15 @@ function FindingCarbox() {
         pointerEvents: 'none',
       }
     }}>
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>We found a carbox for you</Typography>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+        {ride ? 'We found a carbox for you' : 'Searching for a carbox...'}
+      </Typography>
       <CarboxCard
-        id={ride.assignedCarId}
-        origin={ride.source.name}
-        destination={ride.destination.name}
-        departureTime={ride.rideTime}
-        arrivalTime={arrival}
+        id={ride ? ride.assignedCarId : '...'}
+        origin={ride ? ride.source.name : '...'}
+        destination={ride ? ride.destination.name : '...'}
+        departureTime={ride ? ride.rideTime : '...'}
+        arrivalTime={ride ? arrival : '...'}
       />
     </Box>
   );
