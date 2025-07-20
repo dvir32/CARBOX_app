@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Button, Typography, Card, CardContent, Container } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import { Link } from 'react-router-dom';
 
 function Home() {
   return (
@@ -69,10 +70,11 @@ function Home() {
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button
+                component={Link}
+                to="/SearchBox"
                 variant="contained"
                 size="large"
                 startIcon={<DirectionsCarIcon />}
-                href="#/SearchBox"
                 sx={{
                   background: 'linear-gradient(135deg, #0d47a1 0%, #1565c0 100%)',
                   color: '#fff',
