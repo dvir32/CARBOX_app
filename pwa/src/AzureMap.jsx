@@ -10,7 +10,15 @@ function AzureMap({ subscriptionKey, stations, userLocation }) {
     let map;
 
     if (mapRef.current) { // Check for mapRef here
-      console.log(userLocation);
+      const userLocationLogged = useRef(false);
+
+      useEffect(() => {
+        if (!userLocationLogged.current && userLocation) {
+          console.log(userLocation);
+          userLocationLogged.current = true;
+        }
+      }, [userLocation]);
+
       const loadMap = () => {
         map = new atlas.Map(mapRef.current, {
           authOptions: {
