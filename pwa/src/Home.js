@@ -72,7 +72,7 @@ function Home() {
                 variant="contained"
                 size="large"
                 startIcon={<DirectionsCarIcon />}
-                href="/CARBOX_app/SearchBox"
+                href="#/SearchBox"
                 sx={{
                   background: 'linear-gradient(135deg, #0d47a1 0%, #1565c0 100%)',
                   color: '#fff',
