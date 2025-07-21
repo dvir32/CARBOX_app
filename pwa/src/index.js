@@ -14,7 +14,7 @@ import Home from './Home';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <HashRouter basename="/CARBOX_app">
+    <HashRouter>
         <App>
             <Routes>
                 <Route path="/" element={<Home />} />
