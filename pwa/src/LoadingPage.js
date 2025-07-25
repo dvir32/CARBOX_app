@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import FadeLoader from "react-spinners/FadeLoader";
@@ -16,6 +15,7 @@ function LoadingPage() {
   const originStation = location.state?.originStation;
   const destinationStation = location.state?.destinationStation;
   const departureTime = location.state?.departureTime;
+  const userID = location.state?.userID;
 
   useEffect(() => {
     async function createAndAssignCar() {
@@ -28,16 +28,28 @@ function LoadingPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rideOrder)
           });
-          if (!response.ok) throw new Error('Failed to create ride order');
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to create ride order');
+          }
+
           rideOrderToUse = await response.json();
         }
+
         // Now assign the car
         const assignResponse = await fetch(`https://carbox-server-new-1.onrender.com/api/RideOrders/${rideOrderToUse.ride.id}/assign`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         });
-        if (!assignResponse.ok) throw new Error('Failed to assign car');
+
+        if (!assignResponse.ok) {
+          const errorData = await assignResponse.json();
+          throw new Error(errorData.message || 'Failed to assign car');
+        }
+
         const assignData = await assignResponse.json();
+
         navigate('/FindingCarbox', {
           state: {
             originStation,
@@ -46,22 +58,24 @@ function LoadingPage() {
             rideOrder: { ...rideOrderToUse, ...assignData }
           }
         });
+
       } catch (err) {
-        // Optionally handle error (show message, etc.)
-        // For now, just stay on loading page
-        // You could add an error message here
+        const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+        alert(message);
+        navigate('/SearchBox', { state: { userID } });
       }
     }
+
     createAndAssignCar();
     // eslint-disable-next-line
   }, []);
 
   return (
-    <Box sx={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
+    <Box sx={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       background: 'linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%)',
       position: 'relative',
       '&::before': {
@@ -75,10 +89,10 @@ function LoadingPage() {
         pointerEvents: 'none',
       }
     }}>
-      <Card sx={{ 
-        minWidth: 320, 
-        maxWidth: 400, 
-        borderRadius: 4, 
+      <Card sx={{
+        minWidth: 320,
+        maxWidth: 400,
+        borderRadius: 4,
         boxShadow: '0 20px 40px rgba(13, 71, 161, 0.2)',
         background: 'linear-gradient(135deg, #ffffff 0%, #fafafa 100%)',
         border: '1px solid rgba(255, 255, 255, 0.3)',
@@ -107,6 +121,4 @@ function LoadingPage() {
   );
 }
 
-export default LoadingPage; 
-
-
+export default LoadingPage;
