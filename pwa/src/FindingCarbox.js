@@ -4,6 +4,7 @@ import CarboxCard from './CarboxCard';
 import { useLocation } from "react-router-dom";
 import axios from 'axios';
 import { Box, Typography } from '@mui/material';
+import { formatTimestamp } from './utils/dateFormatter';
 
 function FindingCarbox() {
   const location = useLocation();
@@ -22,7 +23,15 @@ function FindingCarbox() {
     }
   }, [rideOrder]);
 
+  // Format the timestamps
+  const formattedDepartureTime = ride ? formatTimestamp(ride.rideTime) : '...';
+  const formattedArrivalTime = arrival ? formatTimestamp(arrival) : '...';
 
+  // Debug logging
+  console.log('FindingCarbox - Original ride.rideTime:', ride?.rideTime);
+  console.log('FindingCarbox - Original arrival:', arrival);
+  console.log('FindingCarbox - Formatted departureTime:', formattedDepartureTime);
+  console.log('FindingCarbox - Formatted arrivalTime:', formattedArrivalTime);
 
   if (error) return <Box sx={{ 
     minHeight: '100vh', 
@@ -56,7 +65,7 @@ function FindingCarbox() {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
+      background: 'radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
       pointerEvents: 'none',
     }
   }}></Box>;
@@ -88,8 +97,8 @@ function FindingCarbox() {
         id={ride ? ride.assignedCarId : '...'}
         origin={ride ? ride.source.name : '...'}
         destination={ride ? ride.destination.name : '...'}
-        departureTime={ride ? ride.rideTime : '...'}
-        arrivalTime={ride ? arrival : '...'}
+        departureTime={formattedDepartureTime}
+        arrivalTime={formattedArrivalTime}
       />
     </Box>
   );

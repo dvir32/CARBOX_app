@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from "react-router-dom";
 import './CarboxCard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -8,13 +9,25 @@ import CardHeader from '@mui/material/CardHeader';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { formatTimestamp } from './utils/dateFormatter';
 
 function CarboxCard(props) {
+  const navigate = useNavigate();
   const id = props.id;
   const origin = props.origin;
   const destination = props.destination;
   const departureTime = props.departureTime;
   const arrivalTime = props.arrivalTime;
+
+  // Format timestamps for navigation to WeHaveSetOff
+  const formattedDepartureTime = formatTimestamp(departureTime);
+  const formattedArrivalTime = formatTimestamp(arrivalTime);
+
+  // Debug logging
+  console.log('CarboxCard - Received departureTime:', departureTime);
+  console.log('CarboxCard - Received arrivalTime:', arrivalTime);
+  console.log('CarboxCard - Formatted departureTime:', formattedDepartureTime);
+  console.log('CarboxCard - Formatted arrivalTime:', formattedArrivalTime);
 
   const handleStartClick = async () => {
     try {
@@ -42,7 +55,16 @@ function CarboxCard(props) {
         }
         alert('Failed to update car status: ' + errorMsg);
       } else {
-        alert('Car status updated successfully!');
+        // Navigate to the new page instead of showing alert
+        navigate('/WeHaveSetOff', {
+          state: {
+            carId: id,
+            origin: origin,
+            destination: destination,
+            departureTime: formattedDepartureTime,
+            arrivalTime: formattedArrivalTime
+          }
+        });
       }
     } catch (error) {
       alert('Error: ' + error.message);
@@ -72,7 +94,7 @@ function CarboxCard(props) {
         }
       }}>
         <CardHeader
-          title={<Typography variant="subtitle1" sx={{ color: '#0d47a1', fontWeight: 600 }}>Departure: <strong>{departureTime}</strong> | Arrival: <strong>{arrivalTime}</strong></Typography>}
+          title={<Typography variant="subtitle1" sx={{ color: '#0d47a1', fontWeight: 600 }}>Departure: <strong>{departureTime}</strong> | <br></br>Arrival: <strong>{arrivalTime}</strong></Typography>}
           sx={{ 
             background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
             borderTopLeftRadius: 16,

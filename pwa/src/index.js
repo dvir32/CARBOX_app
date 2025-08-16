@@ -7,6 +7,8 @@ import SearchBox from './SearchBox';
 import LoadingPage from './LoadingPage';
 import FindingCarbox from './FindingCarbox';
 import CarboxArrived from './CarboxArrived';
+import WeHaveSetOff from './WeHaveSetOff';
+import Arrived from './Arrived';
 import QRScanner from './QRScanner';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
@@ -22,7 +24,9 @@ root.render(
                 <Route path="/LoadingPage" element={<LoadingPage />} />
                 <Route path="/FindingCarbox" element={<FindingCarbox />} />
                 <Route path="/CarboxArrived" element={<CarboxArrived />} />
+                <Route path="/WeHaveSetOff" element={<WeHaveSetOff />} />
                 <Route path="/QRScanner" element={<QRScanner />} />
+                <Route path="/arrived" element={<Arrived />} />
             </Routes>
         </App>
     </HashRouter>

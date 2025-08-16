@@ -18,58 +18,114 @@ function LoadingPage() {
   const userID = location.state?.userID;
 
   useEffect(() => {
-  async function createAndAssignCar() {
-    let rideOrderToUse = rideOrder;
+    async function createAndAssignCar() {
+      let rideOrderToUse = rideOrder;
+      let rideId;
 
-    try {
-      // 1. Create ride order
-      if (!rideOrder?.ride) {
-        const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
+      console.log("Starting createAndAssignCar with rideOrder:", rideOrder);
+      console.log("rideOrder?.ride:", rideOrder?.ride);
+      console.log("rideOrder?.ride?.id:", rideOrder?.ride?.id);
+
+      try {
+        // 1. Create ride order
+        if (!rideOrder?.ride?.id) {
+          console.log("Creating new ride order because rideOrder.ride.id is missing");
+          const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(rideOrder)
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || 'Failed to create ride order');
+          }
+
+          console.log("API Response data:", data);
+          console.log("data.ride:", data.ride);
+          console.log("data.id:", data.id);
+
+          // Check the structure of the response to get the ride ID
+          if (data.ride && data.ride.id) {
+            rideId = data.ride.id;
+            rideOrderToUse = data.ride;
+          } else if (data.id) {
+            rideId = data.id;
+            rideOrderToUse = data;
+          } else {
+            throw new Error('Invalid response structure from ride order creation');
+          }
+        } else {
+          // Use existing ride order
+          if (rideOrder?.ride?.id) {
+            console.log("Using existing ride order with ID:", rideOrder.ride.id);
+            rideId = rideOrder.ride.id;
+          } else {
+            console.log("rideOrder.ride.id is falsy, creating new ride order");
+            // Even though we're in the else block, the ID might be falsy, so create new
+            const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(rideOrder)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(data.message || 'Failed to create ride order');
+            }
+
+            console.log("API Response data:", data);
+            console.log("data.ride:", data.ride);
+            console.log("data.id:", data.id);
+
+            // Check the structure of the response to get the ride ID
+            if (data.ride && data.ride.id) {
+              rideId = data.ride.id;
+              rideOrderToUse = data.ride;
+            } else if (data.id) {
+              rideId = data.id;
+              rideOrderToUse = data;
+            } else {
+              throw new Error('Invalid response structure from ride order creation');
+            }
+          }
+        }
+
+        console.log("Final rideId:", rideId);
+
+        // 2. Assign car
+        const assignResponse = await fetch(`https://carbox-server-new-1.onrender.com/api/RideOrders/${rideId}/assign`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(rideOrder)
         });
 
-        const data = await response.json();
+        const assignData = await assignResponse.json();
 
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to create ride order');
+        if (!assignResponse.ok) {
+          throw new Error(assignData.message || 'Failed to assign car');
         }
 
-        rideOrderToUse = data.ride;
+        navigate('/CarboxArrived', {
+          state: {
+            originStation,
+            destinationStation,
+            departureTime,
+            rideOrder: { ...rideOrderToUse, ...assignData },
+            userID
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        const message = err instanceof Error ? err.message : 'Unexpected error occurred';
+        alert(message);
+        navigate('/SearchBox', { state: { userID } });
       }
-
-      // 2. Assign car
-      const assignResponse = await fetch(`https://carbox-server-new-1.onrender.com/api/RideOrders/${rideOrderToUse.ride.id}/assign`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const assignData = await assignResponse.json();
-
-      if (!assignResponse.ok) {
-        throw new Error(assignData.message || 'Failed to assign car');
-      }
-
-      navigate('/FindingCarbox', {
-        state: {
-          originStation,
-          destinationStation,
-          departureTime,
-          rideOrder: { ...rideOrderToUse, ...assignData }
-        }
-      });
-    } catch (err) {
-      console.error(err);
-      const message = err instanceof Error ? err.message : 'Unexpected error occurred';
-      alert(message);
-      navigate('/SearchBox', { state: { userID } });
     }
-  }
 
-  createAndAssignCar();
-  // eslint-disable-next-line
-}, []);
+    createAndAssignCar();
+  }, [rideOrder, originStation, destinationStation, departureTime, userID, navigate]);
 
   return (
     <Box sx={{
