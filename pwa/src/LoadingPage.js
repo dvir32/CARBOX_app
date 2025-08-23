@@ -28,35 +28,36 @@ function LoadingPage() {
 
       try {
         // 1. Create ride order
-        if (!rideOrder?.ride?.id) {
-          console.log("Creating new ride order because rideOrder.ride.id is missing");
+        if (!rideOrder?.id) {
+          // Create ride order
           const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rideOrder)
           });
-
           const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.message || 'Failed to create ride order');
-          }
-
-          console.log("API Response data:", data);
-          console.log("data.ride:", data.ride);
-          console.log("data.id:", data.id);
-
-          // Check the structure of the response to get the ride ID
-          if (data.ride && data.ride.id) {
-            rideId = data.ride.id;
-            rideOrderToUse = data.ride;
-          } else if (data.id) {
-            rideId = data.id;
-            rideOrderToUse = data;
-          } else {
-            throw new Error('Invalid response structure from ride order creation');
-          }
+          if (!response.ok) throw new Error(data.message || 'Failed to create ride order');
+          rideId = data.ride?.id || data.id;
+          rideOrderToUse = data.ride || data
         } else {
+          // Use existing one
+          rideId = rideOrder.id
+        }
+        console.log("API Response data:", data);
+        console.log("data.ride:", data.ride);
+        console.log("data.id:", data.id);
+
+        // Check the structure of the response to get the ride ID
+        if (data.ride && data.ride.id) {
+          rideId = data.ride.id;
+          rideOrderToUse = data.ride;
+        } else if (data.id) {
+          rideId = data.id;
+          rideOrderToUse = data;
+        } else {
+          throw new Error('Invalid response structure from ride order creation');
+        }
+      } else {
           // Use existing ride order
           if (rideOrder?.ride?.id) {
             console.log("Using existing ride order with ID:", rideOrder.ride.id);
