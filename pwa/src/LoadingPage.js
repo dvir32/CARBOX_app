@@ -11,7 +11,9 @@ import { useEffect } from 'react';
 function LoadingPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const rideOrder = location.state?.rideOrder?.result || location.state?.rideOrder;
+
+  // Ride order passed from SearchBox (no `.ride` field initially)
+  const rideOrder = location.state?.rideOrder;
   const originStation = location.state?.originStation;
   const destinationStation = location.state?.destinationStation;
   const departureTime = location.state?.departureTime;
@@ -23,75 +25,35 @@ function LoadingPage() {
       let rideId;
 
       console.log("Starting createAndAssignCar with rideOrder:", rideOrder);
-      console.log("rideOrder?.ride:", rideOrder?.ride);
-      console.log("rideOrder?.ride?.id:", rideOrder?.ride?.id);
 
       try {
-        // 1. Create ride order
+        // 1. Create ride order if it doesn’t have an ID yet
         if (!rideOrder?.id) {
-          // Create ride order
+          console.log("Creating new ride order because id is missing");
           const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rideOrder)
           });
+
           const data = await response.json();
-          if (!response.ok) throw new Error(data.message || 'Failed to create ride order');
-          rideId = data.ride?.id || data.id;
-          rideOrderToUse = data.ride || data
-        } else {
-          // Use existing one
-          rideId = rideOrder.id
-        }
-        console.log("API Response data:", data);
-        console.log("data.ride:", data.ride);
-        console.log("data.id:", data.id);
-
-        // Check the structure of the response to get the ride ID
-        if (data.ride && data.ride.id) {
-          rideId = data.ride.id;
-          rideOrderToUse = data.ride;
-        } else if (data.id) {
-          rideId = data.id;
-          rideOrderToUse = data;
-        } else {
-          throw new Error('Invalid response structure from ride order creation');
-        }
-      } else {
-          // Use existing ride order
-          if (rideOrder?.ride?.id) {
-            console.log("Using existing ride order with ID:", rideOrder.ride.id);
-            rideId = rideOrder.ride.id;
-          } else {
-            console.log("rideOrder.ride.id is falsy, creating new ride order");
-            // Even though we're in the else block, the ID might be falsy, so create new
-            const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(rideOrder)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-              throw new Error(data.message || 'Failed to create ride order');
-            }
-
-            console.log("API Response data:", data);
-            console.log("data.ride:", data.ride);
-            console.log("data.id:", data.id);
-
-            // Check the structure of the response to get the ride ID
-            if (data.ride && data.ride.id) {
-              rideId = data.ride.id;
-              rideOrderToUse = data.ride;
-            } else if (data.id) {
-              rideId = data.id;
-              rideOrderToUse = data;
-            } else {
-              throw new Error('Invalid response structure from ride order creation');
-            }
+          if (!response.ok) {
+            throw new Error(data.message || 'Failed to create ride order');
           }
+
+          console.log("API Response data:", data);
+
+          // Get ride ID from server response
+          rideId = data.ride?.id || data.id;
+          rideOrderToUse = data.ride || data;
+
+          if (!rideId) {
+            throw new Error('Invalid response structure: no ride ID found');
+          }
+        } else {
+          // Use existing ride order
+          console.log("Using existing ride order with ID:", rideOrder.id);
+          rideId = rideOrder.id;
         }
 
         console.log("Final rideId:", rideId);
@@ -108,6 +70,9 @@ function LoadingPage() {
           throw new Error(assignData.message || 'Failed to assign car');
         }
 
+        console.log("Car assigned successfully:", assignData);
+
+        // Navigate to CarboxArrived with full ride info
         navigate('/CarboxArrived', {
           state: {
             originStation,
