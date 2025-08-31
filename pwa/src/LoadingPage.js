@@ -35,7 +35,6 @@ function LoadingPage() {
           throw new Error(data.message || 'Failed to create ride order');
         }
         
-        console.log("API Response data:", data);
         // Get ride ID from server response
         rideId = data.ride?.id || data.id;
         rideOrderToUse = data.ride || data;
