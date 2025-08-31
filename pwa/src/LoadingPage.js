@@ -23,41 +23,29 @@ function LoadingPage() {
     async function createAndAssignCar() {
       let rideOrderToUse = rideOrder;
       let rideId;
-
-      console.log("Starting createAndAssignCar with rideOrder:", rideOrder);
-
       try {
         // 1. Create ride order if it doesn’t have an ID yet
-        if (!rideOrder?.id) {
-          console.log("Creating new ride order because id is missing");
-          const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
+        const response = await fetch('https://carbox-server-new-1.onrender.com/api/RideOrders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(rideOrder)
           });
-
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.message || 'Failed to create ride order');
-          }
-
-          console.log("API Response data:", data);
-
-          // Get ride ID from server response
-          rideId = data.ride?.id || data.id;
-          rideOrderToUse = data.ride || data;
-
-          if (!rideId) {
-            throw new Error('Invalid response structure: no ride ID found');
-          }
-        } else {
-          // Use existing ride order
-          console.log("Using existing ride order with ID:", rideOrder.id);
-          rideId = rideOrder.id;
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to create ride order');
         }
-
+        
+        console.log("API Response data:", data);
+        // Get ride ID from server response
+        rideId = data.ride?.id || data.id;
+        rideOrderToUse = data.ride || data;
+        
+        if (!rideId) {
+          throw new Error('Invalid response structure: no ride ID found');
+        }
+        
         console.log("Final rideId:", rideId);
-
+        
         // 2. Assign car
         const assignResponse = await fetch(`https://carbox-server-new-1.onrender.com/api/RideOrders/${rideId}/assign`, {
           method: 'POST',
