@@ -1,9 +1,9 @@
-﻿using carbox.Models;
+﻿using CarboxBackend.Models;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace carbox.Repositories
+namespace CarboxBackend.Repositories
 {
     public class RouteRepository
     {
@@ -52,4 +52,3 @@ public static class StationDurations
     // Example usage:
     // int travelTime = StationDurations.Matrix[StationIndex('B'), StationIndex('A')];
 }
-

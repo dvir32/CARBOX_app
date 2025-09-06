@@ -1,4 +1,4 @@
-﻿namespace carbox.Common
+﻿namespace CarboxBackend.Common
 {
     public class GlobalConstants
     {

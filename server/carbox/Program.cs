@@ -1,9 +1,8 @@
-using carbox.Date;
-using carbox.Repositories;
-using carbox.Services;
+using CarboxBackend.Date;
+using CarboxBackend.Repositories;
+using CarboxBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Add MongoDBService
 builder.Services.AddSingleton<MongoDBService>();
@@ -13,9 +12,9 @@ builder.Services.AddScoped(provider =>
     return mongoDBService.Database;
 });
 
-
-// Add MQTTClientService as a Background Service
-builder.Services.AddHostedService<MqttService>();
+// Add MQTTClientService as a Background Service and Singleton
+builder.Services.AddSingleton<MqttService>();
+builder.Services.AddHostedService<MqttService>(provider => provider.GetService<MqttService>());
 builder.Services.AddScoped<CarService>();
 
 builder.Services.AddScoped<RideOrderRepository>();
@@ -24,23 +23,15 @@ builder.Services.AddScoped<StationRepository>();
 builder.Services.AddScoped<RouteRepository>();
 builder.Services.AddScoped<RideService>();
 
-
-
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-});
-
-
-// CORS
+// CORS - Allow all origins for deployment flexibility
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", builder =>
+    options.AddPolicy("AllowAll", builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // React
+        builder.AllowAnyOrigin()
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
@@ -60,7 +51,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Apply the CORS policy
-app.UseCors("AllowReactApp");
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

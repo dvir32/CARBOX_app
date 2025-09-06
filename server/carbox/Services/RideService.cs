@@ -1,12 +1,12 @@
-﻿using carbox.Models;
-using carbox.Repositories;
+﻿using CarboxBackend.Models;
+using CarboxBackend.Repositories;
 using System;
 using System.Threading.Tasks;
 using System.Text.Json;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 
-namespace carbox.Services
+namespace CarboxBackend.Services
 {
     // Service class responsible for handling ride order logic, such as assigning a car
     public class RideService
@@ -18,8 +18,7 @@ namespace carbox.Services
         Random rnd = new Random();
 
         // Constructor - injects repositories
-        public RideService(RideOrderRepository rideOrderRepository, CarRepository carRepository,
-            RouteRepository routeRepository)
+        public RideService(RideOrderRepository rideOrderRepository, CarRepository carRepository, RouteRepository routeRepository)
         {
             _rideOrderRepository = rideOrderRepository;
             _carRepository = carRepository;
@@ -53,11 +52,11 @@ namespace carbox.Services
 
             if (station.Id == 0)
                 car.BatteryLevel = 100;
-            else
+            else 
                 car.BatteryLevel -= 10; // Example battery consumption
             await _carRepository.UpdateCarAsync(car);
         }
-
+       
         public async Task<RideOrder> AssignCarToRide(Car car, RideOrder rideOrder)
         {
             // Assign the car to the ride order
@@ -84,6 +83,7 @@ namespace carbox.Services
 
         public async Task<RideOrder> SearchCarToRide(int rideOrderId)
         {
+            Console.WriteLine("search car to ride");
             // Fetch the ride order
             var rideOrder = await _rideOrderRepository.GetRideByIdAsync(rideOrderId);
             if (rideOrder == null || rideOrder.Status != RideOrderStatus.Open)
@@ -102,6 +102,12 @@ namespace carbox.Services
                 // Sort cars
                 var startStation = rideOrder.source.Id;
                 var sortedCars = CircularSortByStartNumber(candidateCars, startStation);
+                Console.WriteLine($"Candidate cars count: {candidateCars.Count}");
+                foreach (var car in candidateCars)
+                    Console.WriteLine($"Car {car.Id}: Status={car.Status}, Battery={car.BatteryLevel}, LastStation={car.LastStation?.Id}");
+                Console.WriteLine($"Sorted cars count: {sortedCars.Count}");
+                foreach (var car in sortedCars)
+                    Console.WriteLine($"Sorted Car {car.Id}: LastStation={car.LastStation?.Id}");
                 
                 // Time constraint check
                 var selectedCar = sortedCars.First();
@@ -125,16 +131,33 @@ namespace carbox.Services
             }
         }
 
+        public async Task<List<RideOrder>> GetAllRideOrdersAsync()
+        {
+            return await _rideOrderRepository.GetAllRidesAsync();
+        }
+
 
         // Function for circular sorting with a start number, filtering out the start number itself
         public static List<Car> CircularSortByStartNumber(List<Car> cars, int startNumber)
         {
             return cars
-                .Where(c => c.LastStation.Id != startNumber) // Filter out the start number
+                .Where(c => c.LastStation.Id != startNumber)  // Filter out the start number
                 .OrderByDescending(c =>
-                    c.LastStation.Id < startNumber ? c.LastStation.Id : c.LastStation.Id - int.MaxValue / 2
+                    c.LastStation.Id < startNumber ?
+                    c.LastStation.Id :
+                    c.LastStation.Id - int.MaxValue / 2
                 ).ToList();
         }
+
+
+
+
+
+
+
+
+
+
 
 
         //// Get the route information
@@ -172,6 +195,7 @@ namespace carbox.Services
         //.ToList();
 
 
+
         //private async Task<Car> FindNearestCarInCircularRoute(List<Car> availableCars, Station source)
         //{
         //    return await CalculateDistanceInCircularRoute(availableCars, source);
@@ -204,5 +228,12 @@ namespace carbox.Services
         //    return availableCars.FirstOrDefault();
 
         //}
+
     }
 }
+
+
+
+
+
+

@@ -1,19 +1,21 @@
-﻿using carbox.Date;
-using carbox.Models;
+﻿using CarboxBackend.Date;
+using CarboxBackend.Models;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace carbox.Repositories
+namespace CarboxBackend.Repositories
 {
     public class CarRepository
     {
         private readonly IMongoCollection<Car> _carCollection;
 
+        // Constructor: Initialize MongoDB collection
         public CarRepository(MongoDBService mongoDBService)
         {
             _carCollection = mongoDBService.Database?.GetCollection<Car>("Cars");
         }
+
 
         // Get all cars
         public async Task<List<Car>> GetAllCarsAsync()

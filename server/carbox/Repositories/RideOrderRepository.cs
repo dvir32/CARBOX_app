@@ -1,10 +1,10 @@
-﻿using carbox.Date;
-using carbox.Models;
+﻿using CarboxBackend.Date;
+using CarboxBackend.Models;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace carbox.Repositories
+namespace CarboxBackend.Repositories
 {
     public class RideOrderRepository
     {

@@ -1,4 +1,4 @@
-﻿namespace carbox.Date
+﻿namespace CarboxBackend.Date
 {
     using MongoDB.Driver;
     using Microsoft.Extensions.Configuration;

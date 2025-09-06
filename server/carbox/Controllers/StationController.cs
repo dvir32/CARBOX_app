@@ -1,10 +1,10 @@
-﻿using carbox.Models;
-using carbox.Repositories;
+﻿using CarboxBackend.Models;
+using CarboxBackend.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace carbox.Controllers
+namespace CarboxBackend.Controllers
 {
     [ApiController]
     [Route("api/stations")]

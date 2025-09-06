@@ -1,9 +1,9 @@
-﻿using carbox.Models;
-using carbox.Repositories;
+﻿using CarboxBackend.Models;
+using CarboxBackend.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace carbox.Services
+namespace CarboxBackend.Services
 {
     public class CarService
     {
