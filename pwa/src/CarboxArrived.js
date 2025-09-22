@@ -21,7 +21,8 @@ function CarboxArrived() {
         destinationStation,
         departureTime,
         rideOrder,
-        userID
+        userID,
+        travelMinutes
       }
     });
   };
