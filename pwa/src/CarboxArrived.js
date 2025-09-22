@@ -12,7 +12,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 function CarboxArrived() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { originStation, destinationStation, departureTime, rideOrder, userID } = location.state || {};
+  const { originStation, destinationStation, departureTime, rideOrder, userID, travelMinutes } = location.state || {};
 
   const handleNext = () => {
     navigate('/FindingCarbox', {
