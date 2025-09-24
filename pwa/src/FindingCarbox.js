@@ -28,9 +28,6 @@ function FindingCarbox() {
   const formattedDepartureTime = ride ? formatTimestamp(ride.rideTime) : '...';
   const formattedArrivalTime = arrival ? formatTimestamp(arrival) : '...';
 
-  // Debug logging
-  console.log('FindingCarbox - travelMinutes:', travelMinutes);
-
   if (error) return <Box sx={{ 
     minHeight: '100vh', 
     display: 'flex', 
@@ -97,6 +94,7 @@ function FindingCarbox() {
         destination={ride ? ride.destination.name : '...'}
         departureTime={formattedDepartureTime}
         arrivalTime={formattedArrivalTime}
+        travelMinutes={travelMinutes}
       />
     </Box>
   );
