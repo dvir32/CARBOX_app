@@ -9,6 +9,7 @@ import { formatTimestamp } from './utils/dateFormatter';
 function FindingCarbox() {
   const location = useLocation();
   const rideOrder = location.state?.rideOrder?.result || location.state?.rideOrder;
+  const travelMinutes = location.state?.travelMinutes;
   const [ride, setRide] = useState(null);
   const [error, setError] = useState(null);
   const [arrival, setArrivalTime] = useState(null);
@@ -28,10 +29,7 @@ function FindingCarbox() {
   const formattedArrivalTime = arrival ? formatTimestamp(arrival) : '...';
 
   // Debug logging
-  console.log('FindingCarbox - Original ride.rideTime:', ride?.rideTime);
-  console.log('FindingCarbox - Original arrival:', arrival);
-  console.log('FindingCarbox - Formatted departureTime:', formattedDepartureTime);
-  console.log('FindingCarbox - Formatted arrivalTime:', formattedArrivalTime);
+  console.log('FindingCarbox - travelMinutes:', travelMinutes);
 
   if (error) return <Box sx={{ 
     minHeight: '100vh', 
