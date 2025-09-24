@@ -18,6 +18,7 @@ function CarboxCard(props) {
   const destination = props.destination;
   const departureTime = props.departureTime;
   const arrivalTime = props.arrivalTime;
+  const travelMinutes = props.travelMinutes;
 
   // Format timestamps for navigation to WeHaveSetOff
   const formattedDepartureTime = formatTimestamp(departureTime);
@@ -28,6 +29,7 @@ function CarboxCard(props) {
   console.log('CarboxCard - Received arrivalTime:', arrivalTime);
   console.log('CarboxCard - Formatted departureTime:', formattedDepartureTime);
   console.log('CarboxCard - Formatted arrivalTime:', formattedArrivalTime);
+  console.log('CarboxCard - travelMinutes:', travelMinutes);
 
   const handleStartClick = async () => {
     try {
@@ -62,7 +64,8 @@ function CarboxCard(props) {
             origin: origin,
             destination: destination,
             departureTime: formattedDepartureTime,
-            arrivalTime: formattedArrivalTime
+            arrivalTime: formattedArrivalTime,
+            travelMinutes: travelMinutes
           }
         });
       }
