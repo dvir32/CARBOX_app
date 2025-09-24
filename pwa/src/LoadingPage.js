@@ -66,7 +66,8 @@ function LoadingPage() {
             destinationStation,
             departureTime,
             rideOrder: { ...rideOrderToUse, ...assignData },
-            userID
+            userID,
+            travelMinutes: assignData.travelMinutes
           }
         });
       } catch (err) {
