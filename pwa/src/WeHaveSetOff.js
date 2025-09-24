@@ -11,7 +11,7 @@ import { formatTimestamp } from './utils/dateFormatter';
 function WeHaveSetOff() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { carId, origin, destination, departureTime, arrivalTime } = location.state || {};
+  const { carId, origin, destination, departureTime, arrivalTime, travelMinutes } = location.state || {};
 
   // Format timestamps
   const formattedDepartureTime = formatTimestamp(departureTime);
@@ -19,11 +19,11 @@ function WeHaveSetOff() {
 
   // Redirect after 10 seconds
   React.useEffect(() => {
-    console.log("Timer started... navigating in 10s");
+    console.log("Timer started... navigating in ", travelMinutes, " s");
     const timer = setTimeout(() => {
       console.log("Navigating to /arrived now...");
       navigate("/arrived", { state: { carId, origin, destination, arrivalTime } });
-    }, 10000);
+    }, 1000 * travelMinutes);
   
     return () => clearTimeout(timer);
   }, [navigate, carId, origin, destination, arrivalTime]);
