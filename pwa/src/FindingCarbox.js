@@ -9,10 +9,10 @@ import { formatTimestamp } from './utils/dateFormatter';
 function FindingCarbox() {
   const location = useLocation();
   const rideOrder = location.state?.rideOrder?.result || location.state?.rideOrder;
-  const travelMinutes = location.state?.travelMinutes;
   const [ride, setRide] = useState(null);
   const [error, setError] = useState(null);
   const [arrival, setArrivalTime] = useState(null);
+  const { travelMinutes } = location.state || {};
 
   useEffect(() => {
     // Use ride data from rideOrder directly
