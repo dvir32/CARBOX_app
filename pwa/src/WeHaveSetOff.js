@@ -30,7 +30,7 @@ function WeHaveSetOff() {
 
     const pollInterval = setInterval(async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/cars/${carId}`);
+        const response = await fetch(`https://carbox-server-new-1.onrender.com/api/Car/${carId}`);
         if (!response.ok) {
           console.error("Failed to fetch car:", response.status);
           return;
