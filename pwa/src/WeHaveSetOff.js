@@ -17,17 +17,44 @@ function WeHaveSetOff() {
   const formattedDepartureTime = formatTimestamp(departureTime);
   const formattedArrivalTime = formatTimestamp(arrivalTime);
 
-  // Redirect after 10 seconds
   React.useEffect(() => {
-    console.log("Timer started... navigating in ", travelMinutes, " s");
-    const timer = setTimeout(() => {
-      console.log("Navigating to /arrived now...");
-      navigate("/arrived", { state: { carId, origin, destination, arrivalTime } });
-    }, 1000 * travelMinutes);
-  
-    return () => clearTimeout(timer);
-  }, [navigate, carId, origin, destination, arrivalTime]);
-  
+  if (!travelMinutes) {
+    console.warn("travelMinutes missing, defaulting to 10s");
+    return;
+  }
+
+  console.log("Waiting", travelMinutes, "seconds before polling...");
+
+  const waitTimer = setTimeout(() => {
+    console.log("Starting to poll car status...");
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/cars/${carId}`);
+        if (!response.ok) {
+          console.error("Failed to fetch car:", response.status);
+          return;
+        }
+
+        const car = await response.json();
+        console.log("Polled car:", car);
+
+        if (car.status === 0) {
+          console.log("Car status is 0 → navigating to /arrived");
+          clearInterval(pollInterval);
+          navigate("/arrived", { state: { carId, origin, destination, arrivalTime } });
+        }
+      } catch (err) {
+        console.error("Error while polling car:", err);
+      }
+    }, 5000);
+
+    // cleanup when unmounting
+    return () => clearInterval(pollInterval);
+  }, 1000 * travelMinutes);
+
+  return () => clearTimeout(waitTimer);
+}, [navigate, carId, origin, destination, arrivalTime, travelMinutes]); 
 
   return (
     <Box className="we-have-set-off-container">
