@@ -62,6 +62,7 @@ function LoadingPage() {
         // Navigate to CarboxArrived with full ride info
         navigate('/CarboxArrived', {
           state: {
+            rideId,
             originStation,
             destinationStation,
             departureTime,
