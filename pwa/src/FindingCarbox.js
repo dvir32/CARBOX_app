@@ -97,6 +97,7 @@ function FindingCarbox() {
         departureTime={formattedDepartureTime}
         arrivalTime={formattedArrivalTime}
         travelMinutes={travelMinutes}
+        rideId={rideId}
       />
     </Box>
   );
