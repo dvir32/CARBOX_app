@@ -19,6 +19,7 @@ function CarboxCard(props) {
   const departureTime = props.departureTime;
   const arrivalTime = props.arrivalTime;
   const travelMinutes = props.travelMinutes;
+  const rideId = props.rideId;
 
   // Format timestamps for navigation to WeHaveSetOff
   const formattedDepartureTime = formatTimestamp(departureTime);
@@ -40,7 +41,7 @@ function CarboxCard(props) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ CarId: id, status: "2" }),
+        body: JSON.stringify({ CarId: id, status: "2", rideId: rideId }),
       });
       if (!response.ok) {
         let errorMsg = 'Unknown error';
