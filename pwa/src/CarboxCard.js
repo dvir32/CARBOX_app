@@ -26,12 +26,7 @@ function CarboxCard(props) {
   const formattedArrivalTime = formatTimestamp(arrivalTime);
 
   // Debug logging
-  console.log('CarboxCard - Received departureTime:', departureTime);
-  console.log('CarboxCard - Received arrivalTime:', arrivalTime);
-  console.log('CarboxCard - Formatted departureTime:', formattedDepartureTime);
-  console.log('CarboxCard - Formatted arrivalTime:', formattedArrivalTime);
-  console.log('CarboxCard - travelMinutes:', travelMinutes);
-
+  console.log('CarboxCard - Received rideId:', rideId);
   const handleStartClick = async () => {
     try {
       console.log("car id is: " + id);
