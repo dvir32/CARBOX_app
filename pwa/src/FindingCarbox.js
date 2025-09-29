@@ -13,11 +13,13 @@ function FindingCarbox() {
   const [error, setError] = useState(null);
   const [arrival, setArrivalTime] = useState(null);
   const { travelMinutes } = location.state || {};
+  const rideId = location.state?.rideId;
 
   useEffect(() => {
     // Use ride data from rideOrder directly
     if (rideOrder?.ride) {
       setRide(rideOrder.ride);
+      console.log("rideId: ", rideId);
       setArrivalTime(rideOrder.arrival);
     } else {
       setError('Ride data is missing.');
