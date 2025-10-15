@@ -30,7 +30,7 @@ function CarboxCard(props) {
   const handleStartClick = async () => {
     try {
       console.log("car id is: " + id);
-      console.log("car id type is: " + typeof id);
+      console.log("requested status is 1");
       const response = await fetch('https://carbox-server-new-1.onrender.com/api/StartStop', {
         method: 'POST',
         headers: {
