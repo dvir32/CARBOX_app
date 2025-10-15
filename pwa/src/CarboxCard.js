@@ -36,7 +36,7 @@ function CarboxCard(props) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ CarId: id, status: "2", rideId: rideId }),
+        body: JSON.stringify({ CarId: id, status: "1", rideId: rideId }),
       });
       if (!response.ok) {
         let errorMsg = 'Unknown error';

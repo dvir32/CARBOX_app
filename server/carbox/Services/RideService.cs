@@ -61,7 +61,7 @@ namespace CarboxBackend.Services
         {
             // Assign the car to the ride order
             rideOrder.AssignedCarId = car.Id;
-            rideOrder.Status = RideOrderStatus.Assigned;
+            rideOrder.Status = RideOrderStatus.Waiting;
 
             // Save rideOrder updates to the database
             await _rideOrderRepository.UpdateRideAsync(rideOrder);
