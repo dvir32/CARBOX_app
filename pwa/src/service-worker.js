@@ -75,7 +75,6 @@ self.addEventListener('message', (event) => {
 self.addEventListener('fetch', (event) => {
   if (!self.loggedUrls) self.loggedUrls = new Set();
   if (!self.loggedUrls.has(event.request.url)) {
-    console.log('Fetch request for:', event.request.url);
     self.loggedUrls.add(event.request.url);
   }
 });
