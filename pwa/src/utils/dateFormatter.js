@@ -14,11 +14,11 @@ export const formatTimestamp = (isoString) => {
       return isoString; // Return original if parsing fails
     }
     
-    const day = date.getDate();
-    const month = date.toLocaleDateString('en-US', { month: 'long' });
-    const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getUTCDate();
+    const month = date.toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' });
+    const year = date.getUTCFullYear();
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
     
     return `${day} ${month} ${year}, ${hours}:${minutes}`;
   } catch (error) {
