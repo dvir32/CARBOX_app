@@ -50,15 +50,56 @@
       const minutes = String(now.getMinutes()).padStart(2, '0');
       setDepartureTime(`${hours}:${minutes}`);
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          const { latitude, longitude } = position.coords;
-          setUserLocation({ latitude: latitude, longitude: longitude });
-          console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-        }, function (error) {
-          console.error('Error getting location:', error);
-        });
-      }
+      let watchId = null;
+let isMounted = true;
+
+if ("geolocation" in navigator) {
+  const opts = {
+    enableHighAccuracy: true,
+    timeout: 15000,
+    maximumAge: 0,
+  };
+
+  const acceptIfAccurate = (p) => {
+    const { latitude, longitude, accuracy } = p.coords || {};
+    // Ignore very coarse fixes (tune threshold as you like)
+    if (typeof accuracy === "number" && accuracy > 2000) {
+      console.warn(`[geo] Ignored low-accuracy fix: ${accuracy} m`);
+      return;
+    }
+    if (isMounted) setUserLocation({ latitude, longitude });
+    console.log(`[geo] Accepted fix lat=${latitude}, lng=${longitude}, acc=${accuracy}m`);
+  };
+
+  navigator.geolocation.getCurrentPosition(
+    (p) => acceptIfAccurate(p),
+    (err) => console.error("[geo] getCurrentPosition error:", err),
+    opts
+  );
+
+  // Short watch to refine the fix (GPS often improves)
+  watchId = navigator.geolocation.watchPosition(
+    (p) => acceptIfAccurate(p),
+    (err) => console.error("[geo] watchPosition error:", err),
+    { ...opts, maximumAge: 1000 }
+  );
+
+  // Stop watching after 30s
+  const stopTimer = setTimeout(() => {
+    if (watchId != null) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+      console.log("[geo] watchPosition cleared (timeout)");
+    }
+  }, 30000);
+
+  // Cleanup
+  return () => {
+    isMounted = false;
+    clearTimeout(stopTimer);
+    if (watchId != null) navigator.geolocation.clearWatch(watchId);
+  };
+}
       
     }, []);
 
