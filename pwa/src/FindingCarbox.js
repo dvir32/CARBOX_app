@@ -19,7 +19,7 @@ function FindingCarbox() {
     // Use ride data from rideOrder directly
     if (rideOrder?.ride) {
       setRide(rideOrder.ride);
-      console.log("rideId: ", rideId);
+      console.log("departure: ", ride.rideTime);
       setArrivalTime(rideOrder.arrival);
     } else {
       setError('Ride data is missing.');
