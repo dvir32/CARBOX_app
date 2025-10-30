@@ -65,7 +65,7 @@ function LoadingPage() {
             rideId,
             originStation,
             destinationStation,
-            departureTime,
+            departureTime: assignData?.ride?.rideTime,
             rideOrder: { ...rideOrderToUse, ...assignData },
             userID,
             travelMinutes: assignData.travelMinutes
