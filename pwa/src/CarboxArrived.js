@@ -13,7 +13,7 @@ function CarboxArrived() {
   const location = useLocation();
   const navigate = useNavigate();
   const { originStation, destinationStation, departureTime, rideOrder, userID, travelMinutes, rideId } = location.state || {};
-  console.log("CarboxArrived - travelMinutes:", travelMinutes);
+  console.log("CarboxArrived - departureTime:", departureTime);
 
   const handleNext = () => {
     navigate('/FindingCarbox', {
