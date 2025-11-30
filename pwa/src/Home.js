@@ -61,7 +61,7 @@ function Home() {
                 mb: 3
               }}
             >
-              Welcome to CARBOX!
+              Welcome to Lynx!
             </Typography>
             <Typography 
               variant="body1" 
