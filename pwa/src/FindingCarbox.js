@@ -91,7 +91,7 @@ function FindingCarbox() {
         variant="h5"
         sx={{ mb: 2, fontWeight: 'bold', color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
       >
-        {ride ? 'We found a carbox for you' : 'Searching for a carbox...'}
+        {ride ? 'We found a Lynx for you' : 'Searching for a Lynx...'}
       </Typography>
 
       <CarboxCard
