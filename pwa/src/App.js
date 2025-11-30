@@ -83,7 +83,7 @@ function App({ children }) {
               textShadow: '0 2px 4px rgba(0,0,0,0.3)',
             }}
           >
-            CARBOX App
+            Lynx
           </Typography>
         </Toolbar>
       </AppBar>
