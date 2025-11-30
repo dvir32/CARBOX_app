@@ -69,7 +69,7 @@ function WeHaveSetOff() {
           {/* Carbox details */}
           <Box className="carbox-details-box">
             <Typography variant="h6" className="carbox-id">
-              CARBOX {carId}
+              Lynx {carId}
             </Typography>
             <Typography variant="body1" className="route-info">
               {origin} <span className="route-arrow">→</span> {destination}
