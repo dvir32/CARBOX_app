@@ -102,7 +102,7 @@ function CarboxCard(props) {
           }}
         />
         <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1, color: '#0d47a1' }}>CARBOX <strong>{id}</strong></Typography>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1, color: '#0d47a1' }}>Lynx <strong>{id}</strong></Typography>
           <Typography variant="body1" sx={{ mb: 2, color: '#424242' }}>{origin} <span style={{ fontWeight: 'bold', color: '#0d47a1' }}>→</span> {destination}</Typography>
           <Button
             variant="contained"
