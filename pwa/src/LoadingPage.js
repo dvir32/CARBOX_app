@@ -124,7 +124,7 @@ function LoadingPage() {
       }}>
         <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Typography variant="h6" sx={{ mb: 2, color: '#0d47a1', fontWeight: 'bold' }}>
-            Looking for a CARBOX..
+            Looking for a Lynx..
           </Typography>
           <FadeLoader color="#0d47a1" />
         </CardContent>
