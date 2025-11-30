@@ -94,7 +94,7 @@ function CarboxArrived() {
               lineHeight: 1.3
             }}
           >
-            Your CARBOX has arrived at the departure station
+            Your Lynx has arrived at the departure station
           </Typography>
           <Typography 
             variant="body1" 
