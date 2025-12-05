@@ -1,5 +1,5 @@
 ﻿
-namespace carbox.Models
+namespace CarboxBackend.Models
 {
     public class Car
     {

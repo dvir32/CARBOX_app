@@ -1,19 +1,56 @@
-
-#arrived{
-  display: flex;
-  flex-wrap: wrap;
-  align-content: space-around;
-  flex-direction: column;
-  align-items: stretch;
-  margin-top: 30px;
-  gap: 30px;
-  align-items: center;
-  text-align: center;
-
+/* CarboxArrived.css */
+.carbox-arrived-container {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-#arrived-message{
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  font-size: 200%;
+.check-icon {
+  animation: bounceIn 0.6s ease-out 0.2s both;
+}
 
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.message-text {
+  animation: slideInUp 0.5s ease-out 0.4s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.next-button {
+  animation: slideInUp 0.5s ease-out 0.6s both;
 }

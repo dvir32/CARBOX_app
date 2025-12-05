@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using carbox.Models;
-using carbox.Repositories;
+using CarboxBackend.Models;
+using CarboxBackend.Repositories;
 
-namespace carbox.Controllers
+namespace CarboxBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -73,6 +73,9 @@ self.addEventListener('message', (event) => {
 // Any other custom service worker logic can go here.
 
 self.addEventListener('fetch', (event) => {
-  console.log('Fetch request for:', event.request.url);
+  if (!self.loggedUrls) self.loggedUrls = new Set();
+  if (!self.loggedUrls.has(event.request.url)) {
+    self.loggedUrls.add(event.request.url);
+  }
 });
 

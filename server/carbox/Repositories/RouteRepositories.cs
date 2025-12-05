@@ -1,9 +1,9 @@
-﻿using carbox.Models;
+﻿using CarboxBackend.Models;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace carbox.Repositories
+namespace CarboxBackend.Repositories
 {
     public class RouteRepository
     {
@@ -35,4 +35,20 @@ namespace carbox.Repositories
             await _routes.ReplaceOneAsync(r => r.Id == route.Id, route);
         }
     }
+}
+
+public static class StationDurations
+{
+    // Matrix[from, to] = travel time in minutes
+    public static readonly int[,] Matrix = new int[,]
+    {
+        // A    B    C    D
+        {  0,  14,  30,  47 }, // A
+        { 38,   0,  16,  33 }, // B
+        { 22,  36,   0,  17 }, // C
+        {  5,  19,  35,   0 }  // D
+    };
+
+    // Example usage:
+    // int travelTime = StationDurations.Matrix[StationIndex('B'), StationIndex('A')];
 }
